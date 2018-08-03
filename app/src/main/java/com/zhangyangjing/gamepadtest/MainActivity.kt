@@ -9,10 +9,12 @@ import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutCompat
 import android.util.Log
 import android.view.*
 import android.view.InputDevice.*
 import android.view.KeyEvent.*
+import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer
 import com.zhangyangjing.gamepadtest.inputmanagercompat.InputManagerCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -20,7 +22,23 @@ import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,GamePadManager.GamepadListener {
+    private val TAG = MainActivity::class.java.simpleName
+
+    override fun gamepadUpdate() {
+        pad_container.removeAllViews()
+        mGamePadManager.mGamePads?.forEach {
+            val viewer = GamePadViewer(this, mGamePadManager, it.key)
+            pad_container.addView(viewer)
+
+            val params = viewer.layoutParams as LinearLayoutCompat.LayoutParams
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            params.weight = 1f
+            viewer.layoutParams = params
+        }
+    }
+
     private lateinit var mGamePadManager: GamePadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +59,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         mGamePadManager = GamePadManager(this)
-        gamepad_viewer.gamePadManager = mGamePadManager
+        mGamePadManager.addGamepadListener(this)
+        gamepadUpdate()
     }
 
     override fun onResume() {
@@ -114,6 +133,7 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     var mGamePads: SortedMap<Int, GamePad>? = null
     private val mInputManager = InputManagerCompat.Factory.getInputManager(mCtx)!!
     private val listeners = LinkedList<Listener>()
+    private val gampadlisteners = LinkedList<GamepadListener>()
 
     fun resume() {
         mInputManager.registerInputDeviceListener(this, Handler(Looper.getMainLooper()))
@@ -138,17 +158,23 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         listeners.add(listener)
     }
 
+    fun addGamepadListener(gamepadListener: GamepadListener) {
+        gampadlisteners.add(gamepadListener)
+    }
+
     override fun onInputDeviceAdded(deviceId: Int) = updateGamePads()
     override fun onInputDeviceChanged(deviceId: Int) = updateGamePads()
     override fun onInputDeviceRemoved(deviceId: Int) = updateGamePads()
 
     private fun updateGamePads() {
+        Log.v(TAG, "updateGamePads: ${mInputManager.inputDeviceIds.size}")
         mGamePads = mInputManager.inputDeviceIds
                 .map { mInputManager.getInputDevice(it) }
                 .filter { isSource(it.sources, SOURCE_GAMEPAD) || isSource(it.sources, SOURCE_JOYSTICK) }
                 .map { it.id to GamePad(it, this::onClicked) }
                 .toMap()
                 .toSortedMap()
+        gampadlisteners.forEach { it.gamepadUpdate() }
     }
 
     private fun onClicked(deviceId: Int, key: Int) {
@@ -157,6 +183,10 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
 
     interface Listener {
         fun update()
+    }
+
+    interface GamepadListener {
+        fun gamepadUpdate()
     }
 
     companion object {

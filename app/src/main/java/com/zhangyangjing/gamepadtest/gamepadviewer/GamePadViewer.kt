@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.support.v4.view.ViewCompat
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import com.zhangyangjing.gamepadtest.GamePad
 import com.zhangyangjing.gamepadtest.GamePad.Companion.BTN_A
 import com.zhangyangjing.gamepadtest.GamePad.Companion.BTN_B
 import com.zhangyangjing.gamepadtest.GamePad.Companion.BTN_X
@@ -26,16 +26,19 @@ class GamePadViewer : View, GamePadManager.Listener {
 
 //    private val widgets = SparseArray<Base>()
     private val widgets = LinkedList<Base>()
+    var gamePadManager: GamePadManager
+    var deviceId: Int
 
-    var gamePadManager: GamePadManager? = null
-        set(value) {
-            field = value
-            field?.addListener(this)
-        }
+//        set(value) {
+//            field = value
+//            field?.addListener(this)
+//        }
 
-    constructor(context: Context, attrs: AttributeSet?): super(context, attrs) {
-
+    constructor(context: Context, _gamePadManager: GamePadManager, _deviceId: Int): super(context) {
         initWidgets()
+        deviceId = _deviceId
+        gamePadManager = _gamePadManager
+        gamePadManager.addListener(this)
     }
 
     private fun initWidgets() {
@@ -61,29 +64,42 @@ class GamePadViewer : View, GamePadManager.Listener {
 
         canvas.drawColor(Color.BLUE)
 
-        val a = gamePadManager
-        val b = gamePadManager?.mGamePads
-        val c = gamePadManager?.mGamePads?.takeIf { it.size > 0 }
-        val d = gamePadManager?.mGamePads?.takeIf { it.size > 0 }?.get(0)
-        val gamepad = gamePadManager?.mGamePads?.takeIf { it.size > 0 }?.values?.first() ?: return
+//        val a = gamePadManager
+//        val b = gamePadManager?.mGamePads
+//        val c = gamePadManager?.mGamePads?.takeIf { it.size > 0 }
+//        val d = gamePadManager?.mGamePads?.takeIf { it.size > 0 }?.get(0)
+//        val gamepad = gamePadManager?.mGamePads?.takeIf { it.size > 0 }?.values?.first() ?: return
+        val gamepad = gamePadManager?.mGamePads?.get(deviceId) ?: return
 
         widgets.forEach {
-            when (it::class) {
-                Button::class -> {
-                    val btn = it as Button
-                    when (btn.code) {
-                        WGT_BTN_A -> btn.pressed = gamepad.mBtnStates[BTN_A]
-                        WGT_BTN_B -> btn.pressed = gamepad.mBtnStates[BTN_B]
-                        WGT_BTN_X -> btn.pressed = gamepad.mBtnStates[BTN_X]
-                        WGT_BTN_Y -> btn.pressed = gamepad.mBtnStates[BTN_Y]
-                    }
-                }
-            }
-
+            updateWidgetState(it, gamepad)
             canvas.save()
             canvas.clipRect(it.rect)
             it.onDraw(canvas)
             canvas.restore()
+        }
+    }
+
+    private fun updateWidgetState(widget: Base, gamepad: GamePad) {
+        when (widget::class) {
+            Button::class -> {
+                val btn = widget as Button
+                when (btn.code) {
+                    WGT_BTN_A -> btn.pressed = gamepad.mBtnStates[BTN_A]
+                    WGT_BTN_B -> btn.pressed = gamepad.mBtnStates[BTN_B]
+                    WGT_BTN_X -> btn.pressed = gamepad.mBtnStates[BTN_X]
+                    WGT_BTN_Y -> btn.pressed = gamepad.mBtnStates[BTN_Y]
+                }
+            }
+            AnalogButton::class -> {
+                val analogButton = widget as AnalogButton
+            }
+            Stick::class -> {
+                val stick = widget as Stick
+            }
+            DPad::class -> {
+                val dpad = widget as DPad
+            }
         }
     }
 
