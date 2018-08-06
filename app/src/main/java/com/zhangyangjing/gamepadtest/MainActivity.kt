@@ -6,7 +6,10 @@ import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -18,21 +21,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val TAG = MainActivity::class.java.simpleName
 
     override fun gamepadUpdate() {
-        pad_container.removeAllViews()
-        mGamePadManager.mGamePads?.forEach {
-//            val viewer = GamePadViewer(this, mGamePadManager, it.key)
-//            pad_container.addView(viewer)
+//        pad_container.removeAllViews()
+//        mGamePadManager.mGamePads?.forEach {
+////            val viewer = GamePadViewer(this, mGamePadManager, it.key)
+////            pad_container.addView(viewer)
+//
+//            val view = View.inflate(this, R.layout.item_pad, null)
+//            pad_container.addView(view)
+//            view.viewer.gamePad = it.value
+//
+////            val params = viewer.layoutParams as LinearLayoutCompat.LayoutParams
+////            params.width = ViewGroup.LayoutParams.MATCH_PARENT
+////            params.width = ViewGroup.LayoutParams.WRAP_CONTENT
+////            params.weight = 1f
+////            viewer.layoutParams = params
+//        }
 
-            val view = View.inflate(this, R.layout.item_pad, null)
-            pad_container.addView(view)
-            view.viewer.gamePad = it.value
-
-//            val params = viewer.layoutParams as LinearLayoutCompat.LayoutParams
-//            params.width = ViewGroup.LayoutParams.MATCH_PARENT
-//            params.width = ViewGroup.LayoutParams.WRAP_CONTENT
-//            params.weight = 1f
-//            viewer.layoutParams = params
-        }
+        (list.adapter as Adapter).gamePads = mGamePadManager?.mGamePads?.values?.toList()
     }
 
     private lateinit var mGamePadManager: GamePadManager
@@ -56,13 +61,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mGamePadManager = GamePadManager(this)
         mGamePadManager.addGamepadListener(this)
-        gamepadUpdate()
+//        gamepadUpdate()
 
 //        val view = View.inflate(this, R.layout.item_pad, null)
 //        pad_container.addView(view)
 //        view.viewer.gamePad = mGamePadManager.mGamePads?.values?.first()
 
 //        supportFragmentManager.beginTransaction().add(R.id.pad_container, ViewerContainer(mGamePadManager)).commitAllowingStateLoss()
+
+
+        list.layoutManager = LinearLayoutManager(this)
+        list.adapter = Adapter()
+    }
+
+    class Adapter: RecyclerView.Adapter<Holder>() {
+
+        var gamePads: List<GamePad>? = null
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+            val view = View.inflate(parent.context, R.layout.item_pad, null)
+            return Holder(view)
+        }
+
+        override fun onBindViewHolder(holder: Holder, position: Int) {
+            val gamePad = gamePads?.get(position) ?: return
+            val device = gamePad.mDevice
+
+            holder.itemView.viewer.gamePad = gamePad
+            holder.itemView.info.text = "name: ${device.name}\nsource: ${GamePad.getSourcesDesc(device.sources)}"
+        }
+
+        override fun getItemCount(): Int {
+            return gamePads?.count() ?: 0
+        }
+    }
+
+    class Holder(view: View): RecyclerView.ViewHolder(view) {
+
     }
 
     override fun onResume() {
