@@ -9,6 +9,10 @@ import android.util.Log
 import com.zhangyangjing.gamepadtest.R
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_A
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_B
+import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_L1
+import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_R1
+import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_SELECT
+import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_START
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_X
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_Y
 import java.lang.Math.min
@@ -54,11 +58,26 @@ abstract class Base() {
 class DPad(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
 
     var direction = 0
+    lateinit var drawables: List<Drawable>
 
     override fun onDraw(canvas: Canvas) {
+        val d = drawables[direction]
+        d.bounds = rect
+        d.draw(canvas)
     }
 
     override fun onLoadDrawable(context: Context) {
+        drawables = listOf(
+            ContextCompat.getDrawable(context, R.drawable.stick_none)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_up)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_up_right)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_right)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_down_right)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_down)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_down_left)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_left)!!,
+            ContextCompat.getDrawable(context, R.drawable.stick_up_left)!!
+        )
     }
 }
 
@@ -108,6 +127,10 @@ class Button(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Flo
             WGT_BTN_B -> Pair(R.drawable.button_b, R.drawable.button_b_press)
             WGT_BTN_X -> Pair(R.drawable.button_x, R.drawable.button_x_press)
             WGT_BTN_Y -> Pair(R.drawable.button_y, R.drawable.button_y_press)
+            WGT_BTN_L1 -> Pair(R.drawable.button_l, R.drawable.button_l_press)
+            WGT_BTN_R1 -> Pair(R.drawable.button_r, R.drawable.button_r_press)
+            WGT_BTN_START -> Pair(R.drawable.button_start, R.drawable.button_start_press)
+            WGT_BTN_SELECT -> Pair(R.drawable.button_select, R.drawable.button_select_press)
             else -> Pair(R.drawable.button_y, R.drawable.button_y_press)
         }
         drawableNormal = ContextCompat.getDrawable(context, res.first)!!
