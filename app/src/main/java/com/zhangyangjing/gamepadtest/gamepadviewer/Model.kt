@@ -82,15 +82,38 @@ class DPad(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float
 }
 
 class Stick(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
+    lateinit var large: Drawable
+    lateinit var smallNormal: Drawable
+    lateinit var smallPressed: Drawable
 
     var axisX: Float = 0f
     var axisY: Float = 0f
     var pressed: Boolean = false
 
     override fun onDraw(canvas: Canvas) {
+        large.bounds = rect
+        large.draw(canvas)
+
+        val scale = rect.width().toFloat() / large.intrinsicWidth
+        val shrink = ((large.intrinsicWidth - smallNormal.intrinsicWidth) / 2 * scale).toInt()
+        val rectSmall = Rect(rect)
+        rectSmall.left += shrink
+        rectSmall.right -= shrink
+        rectSmall.top += shrink
+        rectSmall.bottom -= shrink
+
+        val offsetX = ((rect.width() - rectSmall.width())  / 2 * axisX).toInt()
+        val offsetY = ((rect.width() - rectSmall.width()) / 2 * axisY).toInt()
+        rectSmall.offset(offsetX, offsetY)
+        val smallDrawable = if (pressed) smallPressed else smallNormal
+        smallDrawable.bounds = rectSmall
+        smallDrawable.draw(canvas)
     }
 
     override fun onLoadDrawable(context: Context) {
+        large = ContextCompat.getDrawable(context, R.drawable.stick_large)!!
+        smallNormal = ContextCompat.getDrawable(context, R.drawable.stick_small)!!
+        smallPressed = ContextCompat.getDrawable(context, R.drawable.stick_small_pressed)!!
     }
 }
 

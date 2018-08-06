@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.*
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         list.adapter = Adapter()
     }
 
-    class Adapter: RecyclerView.Adapter<Holder>() {
+    class Adapter : RecyclerView.Adapter<ViewHolder>() {
 
         var gamePads: List<GamePad>? = null
             set(value) {
@@ -82,12 +83,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 notifyDataSetChanged()
             }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = View.inflate(parent.context, R.layout.item_pad, null)
-            return Holder(view)
+            return object : ViewHolder(view) { }
         }
 
-        override fun onBindViewHolder(holder: Holder, position: Int) {
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val gamePad = gamePads?.get(position) ?: return
             val device = gamePad.mDevice
 
@@ -98,10 +99,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun getItemCount(): Int {
             return gamePads?.count() ?: 0
         }
-    }
-
-    class Holder(view: View): RecyclerView.ViewHolder(view) {
-
     }
 
     override fun onResume() {

@@ -8,6 +8,10 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_RZ
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_X
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_Y
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_Z
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_A
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_B
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_DOWN
@@ -17,6 +21,8 @@ import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_R1
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_RIGHT
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_SELECT
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_START
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_THUMBL
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_THUMBR
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_UP
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_X
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_Y
@@ -75,11 +81,13 @@ class GamePadViewer : View, GamePad.Listener {
         widgets.add(Button(context, WGT_BTN_START, 0.65f, 0.9f, 0.25f, 0.1f))
         widgets.add(Button(context, WGT_BTN_SELECT, 0.35f, 0.9f, 0.25f, 0.1f))
         widgets.add(DPad(context, WGT_DPAD, 0.2f, 0.7f, 0.3f, 0.3f))
+        widgets.add(Stick(context, WGT_STICK_LEFT, 0.2f, 0.3f, 0.3f, 0.3f))
+        widgets.add(Stick(context, WGT_STICK_RIGHT, 0.7f, 0.3f, 0.3f, 0.3f))
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = (width * 0.5).toInt()
+        val height = (width * 0.6).toInt()
         setMeasuredDimension(width, height)
     }
 
@@ -125,6 +133,18 @@ class GamePadViewer : View, GamePad.Listener {
             }
             Stick::class -> {
                 val stick = widget as Stick
+                when (stick.code) {
+                    WGT_STICK_LEFT -> {
+                        stick.axisX = gamepad.mAxisStates[AXIS_X]
+                        stick.axisY = gamepad.mAxisStates[AXIS_Y]
+                        stick.pressed = gamepad.mBtnStates[BTN_THUMBL]
+                    }
+                    WGT_STICK_RIGHT -> {
+                        stick.axisX = gamepad.mAxisStates[AXIS_Z]
+                        stick.axisY = gamepad.mAxisStates[AXIS_RZ]
+                        stick.pressed = gamepad.mBtnStates[BTN_THUMBR]
+                    }
+                }
             }
             DPad::class -> {
                 val dpad = widget as DPad
