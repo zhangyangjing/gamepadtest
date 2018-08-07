@@ -1,6 +1,7 @@
 package com.zhangyangjing.gamepadtest.gamepadviewer
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.support.v4.view.ViewCompat
@@ -86,9 +87,19 @@ class GamePadViewer : View, GamePad.Listener {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = (width * 0.6).toInt()
-        setMeasuredDimension(width, height)
+        val w = MeasureSpec.getSize(widthMeasureSpec)
+        val h = MeasureSpec.getSize(heightMeasureSpec)
+
+        when (context.resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> {
+                val height = (w * 0.6).toInt()
+                setMeasuredDimension(w, height)
+            }
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                val width = (h * 1.6).toInt()
+                setMeasuredDimension(width, h)
+            }
+        }
     }
 
     override fun onDraw(canvas: Canvas) {

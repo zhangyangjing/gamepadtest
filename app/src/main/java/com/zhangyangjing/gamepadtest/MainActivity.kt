@@ -1,5 +1,6 @@
 package com.zhangyangjing.gamepadtest
 
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
@@ -8,7 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ViewHolder
+import android.support.v7.widget.RecyclerView.*
 import android.view.*
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
@@ -70,8 +71,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 //        supportFragmentManager.beginTransaction().add(R.id.pad_container, ViewerContainer(mGamePadManager)).commitAllowingStateLoss()
 
-
-        list.layoutManager = LinearLayoutManager(this)
+        val orientation = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) VERTICAL else HORIZONTAL
+        list.layoutManager = LinearLayoutManager(this, orientation, false)
+//        list.layoutManager = LinearLayoutManager(this)
         list.adapter = Adapter()
     }
 
