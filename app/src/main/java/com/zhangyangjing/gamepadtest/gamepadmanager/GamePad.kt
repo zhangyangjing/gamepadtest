@@ -52,8 +52,21 @@ class GamePad(val mDevice: InputDevice, private val clicked: (Int, Int) -> Unit)
 
     private fun handleMotionEvent(event: MotionEvent): Boolean {
         sAxisCodeMap.forEach { k, v -> mAxisStates[v] = getCenteredAxis(event, k) }
+
+        mBtnStates[BTN_UP] = mAxisStates[AXIS_HAT_Y] < -0.6
+        mBtnStates[BTN_DOWN] = mAxisStates[AXIS_HAT_Y] > 0.6
+        mBtnStates[BTN_LEFT] = mAxisStates[AXIS_HAT_X] < -0.6
+        mBtnStates[BTN_RIGHT] = mAxisStates[AXIS_HAT_X] > 0.6
+
+        run {
+            mBtnStates[BTN_UP] = mBtnStates[BTN_UP] || mAxisStates[AXIS_Y] < -0.6
+            mBtnStates[BTN_DOWN] = mBtnStates[BTN_DOWN] || mAxisStates[AXIS_Y] > 0.6
+            mBtnStates[BTN_LEFT] = mBtnStates[BTN_LEFT] || mAxisStates[AXIS_X] < -0.6
+            mBtnStates[BTN_RIGHT] = mBtnStates[BTN_RIGHT] || mAxisStates[AXIS_X] > 0.6
+        }
+
         listeners.forEach { it.update() }
-        return false
+        return true
     }
 
     private fun getCenteredAxis(event: MotionEvent, axis: Int): Float {
