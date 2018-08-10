@@ -134,9 +134,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val gamePad = gamePads?.get(position) ?: return
             val device = gamePad.device
 
+            val sb = StringBuilder()
+            sb.append("id: ${device.id}")
+            sb.append("\nname: ${device.name}")
+            sb.append("\ndesc: ${if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) device.descriptor else "none"}")
+            sb.append("\nsource: ${GamePad.getSourcesDesc(device.sources)}")
+            holder.itemView.info.text = sb.toString()
             holder.itemView.viewer.gamePad = gamePad
-            val desc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) device.descriptor else "none"
-            holder.itemView.info.text = "id: ${device.id}\nname: ${device.name}\ndesc: $desc\nsource: ${GamePad.getSourcesDesc(device.sources)}"
         }
 
         override fun getItemCount(): Int {
