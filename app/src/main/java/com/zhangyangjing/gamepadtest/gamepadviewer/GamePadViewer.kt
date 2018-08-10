@@ -9,7 +9,11 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_BRAKE
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_LTRIGGER
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_RTRIGGER
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_RZ
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_THROTTLE
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_X
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_Y
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_Z
@@ -17,8 +21,10 @@ import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_A
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_B
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_DOWN
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_L1
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_L2
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_LEFT
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_R1
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_R2
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_RIGHT
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_SELECT
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_START
@@ -29,6 +35,7 @@ import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_X
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_Y
 import com.zhangyangjing.gamepadtest.gamepadviewer.widget.*
 import java.util.*
+import kotlin.math.max
 
 /**
  * Created by zhangyangjing on 2018/7/31.
@@ -92,17 +99,20 @@ class GamePadViewer : View, GamePad.Listener {
     private fun initWidgets() {
         Log.v(TAG, "initWidgets")
 
-        widgets.add(Button(context, WGT_BTN_A, 0.7f, 0.8f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_B, 0.85f, 0.7f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_X, 0.55f, 0.7f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_Y, 0.7f, 0.6f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_L1, 0.2f, 0.1f, 0.3f, 0.1f))
-        widgets.add(Button(context, WGT_BTN_R1, 0.8f, 0.1f, 0.3f, 0.1f))
-        widgets.add(Button(context, WGT_BTN_START, 0.65f, 0.9f, 0.25f, 0.1f))
-        widgets.add(Button(context, WGT_BTN_SELECT, 0.35f, 0.9f, 0.25f, 0.1f))
-        widgets.add(DPad(context, WGT_DPAD, 0.2f, 0.7f, 0.3f, 0.3f))
-        widgets.add(Stick(context, WGT_STICK_LEFT, 0.2f, 0.3f, 0.3f, 0.3f))
-        widgets.add(Stick(context, WGT_STICK_RIGHT, 0.7f, 0.3f, 0.3f, 0.3f))
+        widgets.add(Button(context, WGT_BTN_A, 0.7f, 0.6f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_B, 0.85f, 0.5f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_X, 0.55f, 0.5f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_Y, 0.7f, 0.4f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_SELECT, 0.38f, 0.06f, 0.25f, 0.1f))
+        widgets.add(Button(context, WGT_BTN_START, 0.62f, 0.06f, 0.25f, 0.1f))
+        widgets.add(DPad(context, WGT_DPAD, 0.16f, 0.7f, 0.3f, 0.3f))
+        widgets.add(Stick(context, WGT_STICK_LEFT, 0.35f, 0.83f, 0.3f, 0.3f))
+        widgets.add(Stick(context, WGT_STICK_RIGHT, 0.55f, 0.83f, 0.3f, 0.3f))
+
+        widgets.add(Button(context, WGT_BTN_L1, 0.16f, 0.2f, 0.3f, 0.1f))
+        widgets.add(AnalogButton(context, WGT_ANALOG_BTN_L2, 0.16f, 0.08f, 0.3f, 0.1f))
+        widgets.add(Button(context, WGT_BTN_R1, 0.84f, 0.2f, 0.3f, 0.1f))
+        widgets.add(AnalogButton(context, WGT_ANALOG_BTN_R2, 0.84f, 0.08f, 0.3f, 0.1f))
     }
 
     private fun updateWidgetState(widget: Base, gamePad: GamePad) {
@@ -128,7 +138,16 @@ class GamePadViewer : View, GamePad.Listener {
     }
 
     private fun updateAnalogBtnState(gamePad: GamePad, btn: AnalogButton) {
-
+        when (btn.code) {
+            WGT_ANALOG_BTN_L2 -> {
+                btn.pressed = gamePad.btnStates[BTN_L2]
+                btn.axis = max(gamePad.axisStates[AXIS_LTRIGGER], gamePad.axisStates[AXIS_BRAKE])
+            }
+            WGT_ANALOG_BTN_R2 -> {
+                btn.pressed = gamePad.btnStates[BTN_R2]
+                btn.axis = max(gamePad.axisStates[AXIS_RTRIGGER], gamePad.axisStates[AXIS_THROTTLE])
+            }
+        }
     }
 
     private fun updateStickState(gamePad: GamePad, stick: Stick) {

@@ -85,12 +85,10 @@ class GamePad(val device: InputDevice) {
 
     private fun getCenteredAxis(event: MotionEvent, axis: Int): Float {
         val range = event.device?.getMotionRange(axis, event.source) ?: return 0f
-        if (range != null) {
-            val flat = range.flat
-            val value = event.getAxisValue(axis)
-            if (Math.abs(value) > flat)
-                return value
-        }
+        val flat = range.flat
+        val value = event.getAxisValue(axis)
+        if (Math.abs(value) > flat)
+            return value
         return 0f
     }
 
