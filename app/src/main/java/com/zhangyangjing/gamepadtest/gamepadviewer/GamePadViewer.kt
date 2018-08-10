@@ -27,6 +27,7 @@ import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_THUMBR
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_UP
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_X
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_Y
+import com.zhangyangjing.gamepadtest.gamepadviewer.widget.*
 import java.util.*
 
 /**
