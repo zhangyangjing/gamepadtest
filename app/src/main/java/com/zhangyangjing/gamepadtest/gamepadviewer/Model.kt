@@ -15,7 +15,7 @@ import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_B
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_START
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_X
 import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_Y
-import java.lang.Math.min
+import java.lang.Math.*
 
 /**
  * Created by zhangyangjing on 2018/7/31.
@@ -82,9 +82,16 @@ class DPad(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float
 }
 
 class Stick(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
+    private val TAG = Stick::class.java.simpleName
+
     lateinit var large: Drawable
     lateinit var smallNormal: Drawable
     lateinit var smallPressed: Drawable
+
+    // for test
+//    lateinit var bmp: Bitmap
+//    lateinit var cvs: Canvas
+//    lateinit var paint: Paint
 
     var axisX: Float = 0f
     var axisY: Float = 0f
@@ -102,18 +109,31 @@ class Stick(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Floa
         rectSmall.top += shrink
         rectSmall.bottom -= shrink
 
-        val offsetX = ((rect.width() - rectSmall.width())  / 2 * axisX).toInt()
-        val offsetY = ((rect.width() - rectSmall.width()) / 2 * axisY).toInt()
+        val offsetMax = (rect.width() - rectSmall.width())  / 2
+        val offsetX = (offsetMax * axisX).toInt()
+        val offsetY = (offsetMax * axisY).toInt()
         rectSmall.offset(offsetX, offsetY)
         val smallDrawable = if (pressed) smallPressed else smallNormal
+        Log.v(TAG, "x:$axisX y:$axisY len:${sqrt(pow(axisX.toDouble(), 2.toDouble()) + pow(axisY.toDouble(), 2.toDouble()))}")
         smallDrawable.bounds = rectSmall
         smallDrawable.draw(canvas)
+
+        // for test
+//        cvs.drawPoint(bmp.width / 2f * (1 + axisX), bmp.width / 2f * (1 + axisY), paint)
+//        canvas.drawBitmap(bmp, Rect(0, 0, bmp.width, bmp.height), rect, paint)
     }
 
     override fun onLoadDrawable(context: Context) {
         large = ContextCompat.getDrawable(context, R.drawable.stick_large)!!
         smallNormal = ContextCompat.getDrawable(context, R.drawable.stick_small)!!
         smallPressed = ContextCompat.getDrawable(context, R.drawable.stick_small_pressed)!!
+
+        // for test
+//        bmp = Bitmap.createBitmap(large.intrinsicWidth, large.intrinsicWidth, Bitmap.Config.ARGB_8888)
+//        cvs = Canvas(bmp)
+//        paint = Paint()
+//        paint.color = Color.RED
+//        paint.strokeWidth = 10f
     }
 }
 
@@ -140,7 +160,6 @@ class Button(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Flo
     override fun onDraw(canvas: Canvas) {
         val drawable = if (pressed) drawablePressed else drawableNormal
         drawable.bounds = rect
-        Log.v(TAG, "bounds: $rect")
         drawable.draw(canvas)
     }
 

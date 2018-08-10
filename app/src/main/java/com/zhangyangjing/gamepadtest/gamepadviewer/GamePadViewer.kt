@@ -33,16 +33,7 @@ import java.util.*
  * Created by zhangyangjing on 2018/7/31.
  */
 class GamePadViewer : View, GamePad.Listener {
-    override fun update() {
-        ViewCompat.postInvalidateOnAnimation(this)
-    }
-
-    private val TAG = GamePadViewer::class.java.simpleName
-
-//    private val widgets = SparseArray<Base>()
     private val widgets = LinkedList<Base>()
-//    var gamePadManager: GamePadManager
-//    var deviceId: Int
 
     var gamePad: GamePad? = null
         set(value) {
@@ -55,35 +46,17 @@ class GamePadViewer : View, GamePad.Listener {
         initWidgets()
     }
 
-//    constructor(context: Context, _gamePadManager: GamePadManager, _deviceId: Int): super(context) {
-//        initWidgets()
-//        deviceId = _deviceId
-//        gamePadManager = _gamePadManager
-//        gamePadManager.addListener(this)
-//    }
+    override fun onStateUpdate(type: Int, code: Int) {
+        ViewCompat.postInvalidateOnAnimation(this)
+    }
 
-    private fun initWidgets() {
-        Log.v(TAG, "initWidgets")
-//        widgets.put(WGT_BTN_A, Button(resources, WGT_BTN_A, 0.2f, 0.2f, 0.2f, 0.2f))
-//        widgets.put(WGT_BTN_B, Button(resources, WGT_BTN_B, 0.4f, 0.4f, 0.2f, 0.2f))
-//        widgets.put(WGT_BTN_X, Button(resources, WGT_BTN_X, 0.6f, 0.6f, 0.2f, 0.2f))
-//        widgets.put(WGT_BTN_X, Button(resources, WGT_BTN_Y, 0.8f, 0.8f, 0.2f, 0.2f))
-//        widgets.put(WGT_BTN_L1, Button())
-//        widgets.put(WGT_BTN_R1, Button())
-//        widgets.put(WGT_BTN_SELECT, Button())
-//        widgets.put(WGT_BTN_START, Button())
+    override fun onBtnClick(code: Int) {
+        ViewCompat.postInvalidateOnAnimation(this)
+    }
 
-        widgets.add(Button(context, WGT_BTN_A, 0.7f, 0.8f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_B, 0.85f, 0.7f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_X, 0.55f, 0.7f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_Y, 0.7f, 0.6f, 0.2f, 0.2f))
-        widgets.add(Button(context, WGT_BTN_L1, 0.2f, 0.1f, 0.3f, 0.1f))
-        widgets.add(Button(context, WGT_BTN_R1, 0.8f, 0.1f, 0.3f, 0.1f))
-        widgets.add(Button(context, WGT_BTN_START, 0.65f, 0.9f, 0.25f, 0.1f))
-        widgets.add(Button(context, WGT_BTN_SELECT, 0.35f, 0.9f, 0.25f, 0.1f))
-        widgets.add(DPad(context, WGT_DPAD, 0.2f, 0.7f, 0.3f, 0.3f))
-        widgets.add(Stick(context, WGT_STICK_LEFT, 0.2f, 0.3f, 0.3f, 0.3f))
-        widgets.add(Stick(context, WGT_STICK_RIGHT, 0.7f, 0.3f, 0.3f, 0.3f))
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        widgets.forEach { it.updateCanvasSize(w, h) }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -104,17 +77,8 @@ class GamePadViewer : View, GamePad.Listener {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        Log.v(TAG, "onDraw")
 
         canvas.drawColor(Color.BLUE)
-
-//        val a = gamePadManager
-//        val b = gamePadManager?.mGamePads
-//        val c = gamePadManager?.mGamePads?.takeIf { it.size > 0 }
-//        val d = gamePadManager?.mGamePads?.takeIf { it.size > 0 }?.get(0)
-//        val gamepad = gamePadManager?.mGamePads?.takeIf { it.size > 0 }?.values?.first() ?: return
-//        val gamepad = gamePadManager?.mGamePads?.get(deviceId) ?: return
-
         widgets.forEach {
             updateWidgetState(it, gamePad ?: return)
             canvas.save()
@@ -124,88 +88,75 @@ class GamePadViewer : View, GamePad.Listener {
         }
     }
 
-    private fun updateWidgetState(widget: Base, gamepad: GamePad) {
+    private fun initWidgets() {
+        Log.v(TAG, "initWidgets")
+
+        widgets.add(Button(context, WGT_BTN_A, 0.7f, 0.8f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_B, 0.85f, 0.7f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_X, 0.55f, 0.7f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_Y, 0.7f, 0.6f, 0.2f, 0.2f))
+        widgets.add(Button(context, WGT_BTN_L1, 0.2f, 0.1f, 0.3f, 0.1f))
+        widgets.add(Button(context, WGT_BTN_R1, 0.8f, 0.1f, 0.3f, 0.1f))
+        widgets.add(Button(context, WGT_BTN_START, 0.65f, 0.9f, 0.25f, 0.1f))
+        widgets.add(Button(context, WGT_BTN_SELECT, 0.35f, 0.9f, 0.25f, 0.1f))
+        widgets.add(DPad(context, WGT_DPAD, 0.2f, 0.7f, 0.3f, 0.3f))
+        widgets.add(Stick(context, WGT_STICK_LEFT, 0.2f, 0.3f, 0.3f, 0.3f))
+        widgets.add(Stick(context, WGT_STICK_RIGHT, 0.7f, 0.3f, 0.3f, 0.3f))
+    }
+
+    private fun updateWidgetState(widget: Base, gamePad: GamePad) {
         when (widget::class) {
-            Button::class -> {
-                val btn = widget as Button
-                when (btn.code) {
-                    WGT_BTN_A -> btn.pressed = gamepad.mBtnStates[BTN_A]
-                    WGT_BTN_B -> btn.pressed = gamepad.mBtnStates[BTN_B]
-                    WGT_BTN_X -> btn.pressed = gamepad.mBtnStates[BTN_X]
-                    WGT_BTN_Y -> btn.pressed = gamepad.mBtnStates[BTN_Y]
-                    WGT_BTN_L1 -> btn.pressed = gamepad.mBtnStates[BTN_L1]
-                    WGT_BTN_R1 -> btn.pressed = gamepad.mBtnStates[BTN_R1]
-                    WGT_BTN_START -> btn.pressed = gamepad.mBtnStates[BTN_START]
-                    WGT_BTN_SELECT -> btn.pressed = gamepad.mBtnStates[BTN_SELECT]
-                }
+            Button::class -> { updateBtnState(gamePad, widget as Button) }
+            AnalogButton::class -> { updateAnalogBtnState(gamePad, widget as AnalogButton) }
+            Stick::class -> { updateStickState(gamePad, widget as Stick) }
+            DPad::class -> { updateDpadState(gamePad, widget as DPad) }
+        }
+    }
+
+    private fun updateBtnState(gamePad: GamePad, btn: Button) {
+        when (btn.code) {
+            WGT_BTN_A -> btn.pressed = gamePad.btnStates[BTN_A]
+            WGT_BTN_B -> btn.pressed = gamePad.btnStates[BTN_B]
+            WGT_BTN_X -> btn.pressed = gamePad.btnStates[BTN_X]
+            WGT_BTN_Y -> btn.pressed = gamePad.btnStates[BTN_Y]
+            WGT_BTN_L1 -> btn.pressed = gamePad.btnStates[BTN_L1]
+            WGT_BTN_R1 -> btn.pressed = gamePad.btnStates[BTN_R1]
+            WGT_BTN_START -> btn.pressed = gamePad.btnStates[BTN_START]
+            WGT_BTN_SELECT -> btn.pressed = gamePad.btnStates[BTN_SELECT]
+        }
+    }
+
+    private fun updateAnalogBtnState(gamePad: GamePad, btn: AnalogButton) {
+
+    }
+
+    private fun updateStickState(gamePad: GamePad, stick: Stick) {
+        when (stick.code) {
+            WGT_STICK_LEFT -> {
+                stick.axisX = gamePad.axisStates[AXIS_X]
+                stick.axisY = gamePad.axisStates[AXIS_Y]
+                stick.pressed = gamePad.btnStates[BTN_THUMBL]
             }
-            AnalogButton::class -> {
-                val analogButton = widget as AnalogButton
-            }
-            Stick::class -> {
-                val stick = widget as Stick
-                when (stick.code) {
-                    WGT_STICK_LEFT -> {
-                        stick.axisX = gamepad.mAxisStates[AXIS_X]
-                        stick.axisY = gamepad.mAxisStates[AXIS_Y]
-                        stick.pressed = gamepad.mBtnStates[BTN_THUMBL]
-                    }
-                    WGT_STICK_RIGHT -> {
-                        stick.axisX = gamepad.mAxisStates[AXIS_Z]
-                        stick.axisY = gamepad.mAxisStates[AXIS_RZ]
-                        stick.pressed = gamepad.mBtnStates[BTN_THUMBR]
-                    }
-                }
-            }
-            DPad::class -> {
-                val dpad = widget as DPad
-
-                val STICK_STATE_NORMAL      = 0
-                val STICK_STATE_UP          = 1
-                val STICK_STATE_UP_RIGHT    = 2
-                val STICK_STATE_RIGHT       = 3
-                val STICK_STATE_DOWN_RIGHT  = 4
-                val STICK_STATE_DOWN        = 5
-                val STICK_STATE_DOWN_LEFT   = 6
-                val STICK_STATE_LEFT        = 7
-                val STICK_STATE_UP_LEFT     = 8
-
-                val sArrayMap = intArrayOf(
-                        STICK_STATE_NORMAL, // 0000
-                        STICK_STATE_DOWN, // 0001
-                        STICK_STATE_RIGHT, // 0010
-                        STICK_STATE_DOWN_RIGHT, // 0011
-                        STICK_STATE_UP, // 0100
-                        STICK_STATE_UP, // 0101
-                        STICK_STATE_UP_RIGHT, // 0110
-                        STICK_STATE_UP_RIGHT, // 0111
-                        STICK_STATE_LEFT, // 1000
-                        STICK_STATE_DOWN_LEFT, // 1001
-                        STICK_STATE_LEFT, // 1010
-                        STICK_STATE_LEFT, // 1011
-                        STICK_STATE_UP_LEFT, // 1100
-                        STICK_STATE_UP_LEFT, // 1101
-                        STICK_STATE_UP_LEFT, // 1110
-                        STICK_STATE_UP_LEFT)// 1111
-
-                var state = 0
-                if (gamepad.mBtnStates[BTN_UP]) state = state or 0b0100
-                if (gamepad.mBtnStates[BTN_DOWN]) state = state or 0b0001
-                if (gamepad.mBtnStates[BTN_LEFT]) state = state or 0b1000
-                if (gamepad.mBtnStates[BTN_RIGHT]) state = state or 0b0010
-
-                dpad.direction = sArrayMap[state]
+            WGT_STICK_RIGHT -> {
+                stick.axisX = gamePad.axisStates[AXIS_Z]
+                stick.axisY = gamePad.axisStates[AXIS_RZ]
+                stick.pressed = gamePad.btnStates[BTN_THUMBR]
             }
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        Log.v(TAG, "onSizeChanged")
-        widgets.forEach { it.updateCanvasSize(w, h) }
+    private fun updateDpadState(gamePad: GamePad, dpad: DPad) {
+        var state = 0
+        if (gamePad.btnStates[BTN_UP]) state = state or 0b0100
+        if (gamePad.btnStates[BTN_DOWN]) state = state or 0b0001
+        if (gamePad.btnStates[BTN_LEFT]) state = state or 0b1000
+        if (gamePad.btnStates[BTN_RIGHT]) state = state or 0b0010
+        dpad.direction = sArrayMap[state]
     }
 
     companion object {
+        private val TAG = GamePadViewer::class.java.simpleName
+
         const val WGT_BTN_A = 0
         const val WGT_BTN_B = 1
         const val WGT_BTN_X = 2
@@ -219,5 +170,33 @@ class GamePadViewer : View, GamePad.Listener {
         const val WGT_STICK_RIGHT = 10
         const val WGT_ANALOG_BTN_L2 = 11
         const val WGT_ANALOG_BTN_R2 = 12
+
+        private const val STICK_STATE_NORMAL      = 0
+        private const val STICK_STATE_UP          = 1
+        private const val STICK_STATE_UP_RIGHT    = 2
+        private const val STICK_STATE_RIGHT       = 3
+        private const val STICK_STATE_DOWN_RIGHT  = 4
+        private const val STICK_STATE_DOWN        = 5
+        private const val STICK_STATE_DOWN_LEFT   = 6
+        private const val STICK_STATE_LEFT        = 7
+        private const val STICK_STATE_UP_LEFT     = 8
+
+        private val sArrayMap = intArrayOf(
+                STICK_STATE_NORMAL, // 0000
+                STICK_STATE_DOWN, // 0001
+                STICK_STATE_RIGHT, // 0010
+                STICK_STATE_DOWN_RIGHT, // 0011
+                STICK_STATE_UP, // 0100
+                STICK_STATE_UP, // 0101
+                STICK_STATE_UP_RIGHT, // 0110
+                STICK_STATE_UP_RIGHT, // 0111
+                STICK_STATE_LEFT, // 1000
+                STICK_STATE_DOWN_LEFT, // 1001
+                STICK_STATE_LEFT, // 1010
+                STICK_STATE_LEFT, // 1011
+                STICK_STATE_UP_LEFT, // 1100
+                STICK_STATE_UP_LEFT, // 1101
+                STICK_STATE_UP_LEFT, // 1110
+                STICK_STATE_UP_LEFT)// 1111
     }
 }

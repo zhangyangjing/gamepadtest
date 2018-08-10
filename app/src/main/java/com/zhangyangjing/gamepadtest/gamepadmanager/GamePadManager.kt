@@ -17,8 +17,7 @@ import java.util.*
 class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     var mGamePads: SortedMap<Int, GamePad>? = null
     private val mInputManager = InputManagerCompat.Factory.getInputManager(mCtx)!!
-    private val listeners = LinkedList<Listener>()
-    private val gampadlisteners = LinkedList<GamepadListener>()
+    private val mGamPadListeners = LinkedList<GamePadListener>()
 
     fun resume() {
         mInputManager.registerInputDeviceListener(this, Handler(Looper.getMainLooper()))
@@ -34,17 +33,11 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     fun handleEvent(event: InputEvent): Boolean {
         Log.v(TAG, "handleEvent: $event ${GamePad.getSourcesDesc(event.source)}")
         if (event is MotionEvent) mInputManager.onGenericMotionEvent(event)
-        val result = mGamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: return false
-        listeners.forEach { it.update() }
-        return result
+        return mGamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: return false
     }
 
-    fun addListener(listener: Listener) {
-        listeners.add(listener)
-    }
-
-    fun addGamepadListener(gamepadListener: GamepadListener) {
-        gampadlisteners.add(gamepadListener)
+    fun addGamePadListener(gamePadListener: GamePadListener) {
+        mGamPadListeners.add(gamePadListener)
     }
 
     override fun onInputDeviceAdded(deviceId: Int) = updateGamePads()
@@ -52,26 +45,17 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     override fun onInputDeviceRemoved(deviceId: Int) = updateGamePads()
 
     private fun updateGamePads() {
-        Log.v(TAG, "updateGamePads: ${mInputManager.inputDeviceIds.size}")
         mGamePads = mInputManager.inputDeviceIds
                 .map { mInputManager.getInputDevice(it) }
                 .filter { isSource(it.sources, SOURCE_GAMEPAD) || isSource(it.sources, SOURCE_JOYSTICK) }
-                .map { it.id to GamePad(it, this::onClicked) }
+                .map { it.id to GamePad(it) }
                 .toMap()
                 .toSortedMap()
-        gampadlisteners.forEach { it.gamepadUpdate() }
+        mGamPadListeners.forEach { it.gamePadUpdate() }
     }
 
-    private fun onClicked(deviceId: Int, key: Int) {
-        Log.v(TAG, "onClicked: ${GamePad.sBtnNameMap[key]}")
-    }
-
-    interface Listener {
-        fun update()
-    }
-
-    interface GamepadListener {
-        fun gamepadUpdate()
+    interface GamePadListener {
+        fun gamePadUpdate()
     }
 
     companion object {

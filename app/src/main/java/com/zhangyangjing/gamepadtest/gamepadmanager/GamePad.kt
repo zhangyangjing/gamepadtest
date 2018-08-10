@@ -13,10 +13,15 @@ import java.util.*
 /**
  * Created by zhangyangjing on 2018/8/4.
  */
-class GamePad(val mDevice: InputDevice, private val clicked: (Int, Int) -> Unit) {
-    private val listeners = LinkedList<Listener>()
-    val mBtnStates = Array(BTN_COUNT) { false }
-    val mAxisStates = Array(AXIS_COUNT) { 0f }
+class GamePad(val device: InputDevice) {
+    val btnStates = Array(BTN_COUNT) { false }
+    val axisStates = Array(AXIS_COUNT) { 0f }
+    private val mListeners = LinkedList<Listener>()
+
+
+    fun addListener(listener: Listener) {
+        mListeners.add(listener)
+    }
 
     fun handleEvent(event: InputEvent): Boolean {
         dump()
@@ -27,22 +32,18 @@ class GamePad(val mDevice: InputDevice, private val clicked: (Int, Int) -> Unit)
         }
     }
 
-    fun addListener(listener: Listener) {
-        listeners.add(listener)
-    }
-
     private fun handleKeyEvent(event: KeyEvent): Boolean {
-        return sBtnCodeMap[event.keyCode]?.let {
+        return sBtnCodeMap[event.keyCode]?.let { code ->
             when (event.action) {
                 ACTION_DOWN -> {
-                    mBtnStates[it] = true
-                    listeners.forEach { it.update() }
+                    updateBtnState(code, true)
                     true
                 }
                 ACTION_UP -> {
-                    mBtnStates[it] = false
-                    takeIf { 200 > event.eventTime - event.downTime }?.apply { clicked(mDevice.id, it) }
-                    listeners.forEach { it.update() }
+                    updateBtnState(code, false)
+                    takeIf { 200 > event.eventTime - event.downTime }?.apply {
+                        mListeners.forEach { it.onBtnClick(code) }
+                    }
                     true
                 }
                 else -> false
@@ -51,22 +52,35 @@ class GamePad(val mDevice: InputDevice, private val clicked: (Int, Int) -> Unit)
     }
 
     private fun handleMotionEvent(event: MotionEvent): Boolean {
-        sAxisCodeMap.forEach { k, v -> mAxisStates[v] = getCenteredAxis(event, k) }
+        sAxisCodeMap.forEach { k, v -> updateAxisState(v, getCenteredAxis(event, k)) }
 
-        mBtnStates[BTN_UP] = mAxisStates[AXIS_HAT_Y] < -0.6
-        mBtnStates[BTN_DOWN] = mAxisStates[AXIS_HAT_Y] > 0.6
-        mBtnStates[BTN_LEFT] = mAxisStates[AXIS_HAT_X] < -0.6
-        mBtnStates[BTN_RIGHT] = mAxisStates[AXIS_HAT_X] > 0.6
+        updateBtnState(BTN_UP, axisStates[AXIS_HAT_Y] < -0.6)
+        updateBtnState(BTN_DOWN, axisStates[AXIS_HAT_Y] > 0.6)
+        updateBtnState(BTN_LEFT, axisStates[AXIS_HAT_X] < -0.6)
+        updateBtnState(BTN_RIGHT, axisStates[AXIS_HAT_X] > 0.6)
 
         run {
-            mBtnStates[BTN_UP] = mBtnStates[BTN_UP] || mAxisStates[AXIS_Y] < -0.6
-            mBtnStates[BTN_DOWN] = mBtnStates[BTN_DOWN] || mAxisStates[AXIS_Y] > 0.6
-            mBtnStates[BTN_LEFT] = mBtnStates[BTN_LEFT] || mAxisStates[AXIS_X] < -0.6
-            mBtnStates[BTN_RIGHT] = mBtnStates[BTN_RIGHT] || mAxisStates[AXIS_X] > 0.6
+            updateBtnState(BTN_UP, btnStates[BTN_UP] || axisStates[AXIS_Y] < -0.6)
+            updateBtnState(BTN_DOWN, btnStates[BTN_DOWN] || axisStates[AXIS_Y] > 0.6)
+            updateBtnState(BTN_LEFT, btnStates[BTN_LEFT] || axisStates[AXIS_X] < -0.6)
+            updateBtnState(BTN_RIGHT, btnStates[BTN_RIGHT] || axisStates[AXIS_X] > 0.6)
         }
 
-        listeners.forEach { it.update() }
         return true
+    }
+
+    private inline fun updateBtnState(code: Int, state: Boolean) {
+        if (state == btnStates[code])
+            return
+        btnStates[code] = state
+        mListeners.forEach { it.onStateUpdate(TYPE_BTN, code) }
+    }
+
+    private inline fun updateAxisState(code: Int, state: Float) {
+        if (state == axisStates[code])
+            return
+        axisStates[code] = state
+        mListeners.forEach { it.onStateUpdate(TYPE_AXIS, code) }
     }
 
     private fun getCenteredAxis(event: MotionEvent, axis: Int): Float {
@@ -81,17 +95,22 @@ class GamePad(val mDevice: InputDevice, private val clicked: (Int, Int) -> Unit)
     }
 
     private fun dump() {
-        Log.v(TAG, "------${mDevice.name}")
-        Log.v(TAG, mAxisStates.mapIndexed { i, v -> "${sAxisNameMap[i]}:$v" }.joinToString())
-        Log.v(TAG, mBtnStates.mapIndexed { i, v -> "${sBtnNameMap[i]}:${if(v) "t" else "f"}" }.joinToString())
+        Log.v(TAG, "------${device.name}")
+        Log.v(TAG, axisStates.mapIndexed { i, v -> "${sAxisNameMap[i]}:$v" }.joinToString())
+        Log.v(TAG, btnStates.mapIndexed { i, v -> "${sBtnNameMap[i]}:${if(v) "t" else "f"}" }.joinToString())
     }
 
     interface Listener {
-        fun update()
+        fun onBtnClick(code: Int)
+        fun onStateUpdate(type: Int, code: Int)
     }
 
     companion object {
         private val TAG = GamePad::class.java.simpleName
+
+        // type
+        const val TYPE_BTN = 0
+        const val TYPE_AXIS = 1
 
         // button
         const val BTN_A = 0
