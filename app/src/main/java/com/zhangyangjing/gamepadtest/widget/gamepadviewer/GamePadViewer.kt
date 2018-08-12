@@ -1,4 +1,4 @@
-package com.zhangyangjing.gamepadtest.gamepadviewer
+package com.zhangyangjing.gamepadtest.widget.gamepadviewer
 
 import android.content.Context
 import android.content.res.Configuration
@@ -33,7 +33,8 @@ import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_THUMBR
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_UP
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_X
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_Y
-import com.zhangyangjing.gamepadtest.gamepadviewer.widget.*
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget.*
+
 import java.util.*
 import kotlin.math.max
 

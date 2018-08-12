@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.zhangyangjing.gamepadtest.inputmanagercompat;
+package com.zhangyangjing.gamepadtest.gamepadmanager.inputmanagercompat;
 
 import android.content.Context;
 import android.os.Build;

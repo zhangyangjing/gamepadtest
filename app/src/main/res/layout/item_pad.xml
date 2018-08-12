@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer
+    <com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer
         android:id="@+id/viewer"
         android:layout_weight="1.0"
         android:layout_width="wrap_content"

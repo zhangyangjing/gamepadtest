@@ -1,10 +1,11 @@
-package com.zhangyangjing.gamepadtest.gamepadviewer.widget
+package com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.zhangyangjing.gamepadtest.R
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget.Base
 
 class DPad(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
 

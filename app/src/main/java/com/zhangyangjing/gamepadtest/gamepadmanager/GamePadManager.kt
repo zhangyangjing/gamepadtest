@@ -8,7 +8,7 @@ import android.support.v4.view.InputDeviceCompat.SOURCE_JOYSTICK
 import android.util.Log
 import android.view.InputEvent
 import android.view.MotionEvent
-import com.zhangyangjing.gamepadtest.inputmanagercompat.InputManagerCompat
+import com.zhangyangjing.gamepadtest.gamepadmanager.inputmanagercompat.InputManagerCompat
 import java.util.*
 
 /**

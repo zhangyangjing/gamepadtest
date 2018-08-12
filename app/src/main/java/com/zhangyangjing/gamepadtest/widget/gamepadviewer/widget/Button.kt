@@ -1,18 +1,18 @@
-package com.zhangyangjing.gamepadtest.gamepadviewer.widget
+package com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.zhangyangjing.gamepadtest.R
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_A
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_B
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_L1
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_R1
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_SELECT
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_START
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_X
-import com.zhangyangjing.gamepadtest.gamepadviewer.GamePadViewer.Companion.WGT_BTN_Y
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_A
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_B
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_L1
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_R1
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_SELECT
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_START
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_X
+import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_BTN_Y
 
 class Button(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
     private val TAG = Button::class.java.simpleName
