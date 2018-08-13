@@ -11,16 +11,16 @@ import kotlinx.android.synthetic.main.item_log.view.*
  * Created by zhangyangjing on 2018/8/13.
  */
 class LogAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ILog {
-    private val mMessages = CircularArray<String>(MAX)
+    private val mMessages = CircularArray<CharSequence>(MAX_MESSAGES)
 
     override fun clearMessage() {
         mMessages.clear()
         notifyDataSetChanged()
     }
 
-    override fun addMessage(msg: String) {
+    override fun addMessage(msg: CharSequence) {
         mMessages.addLast(msg)
-        if (mMessages.size() > MAX)
+        if (mMessages.size() > MAX_MESSAGES)
             mMessages.popFirst()
         notifyDataSetChanged()
     }
@@ -39,6 +39,6 @@ class LogAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ILog {
     }
 
     companion object {
-        private const val MAX = 100
+        private const val MAX_MESSAGES = 100
     }
 }

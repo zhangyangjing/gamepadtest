@@ -4,10 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="20dp">
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="8dp"/>
 </android.support.v7.widget.LinearLayoutCompat>

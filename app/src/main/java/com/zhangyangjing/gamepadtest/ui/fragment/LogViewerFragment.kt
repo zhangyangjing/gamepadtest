@@ -1,14 +1,18 @@
 package com.zhangyangjing.gamepadtest.ui.fragment
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.GamePadListener
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.IGamePadListener
 import kotlinx.android.synthetic.main.fragment_log_viewer.*
+import lt.neworld.spanner.Spanner
+import lt.neworld.spanner.Spans
 
 class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
     private var host: MainActivity? = null
@@ -63,7 +67,7 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
         return true
     }
 
-    private inline fun formatEvent(event: InputEvent): String? {
+    private inline fun formatEvent(event: InputEvent): CharSequence? {
         return when (event::class) {
             KeyEvent::class -> formatKeyEvent(event as KeyEvent)
             MotionEvent::class -> formatMotionEvent(event as MotionEvent)
@@ -75,10 +79,20 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
         return "MOTION ${event.action}"
     }
 
-    private inline fun formatKeyEvent(event: KeyEvent): String {
+    private inline fun formatKeyEvent(event: KeyEvent): CharSequence {
+        val source = GamePad.getSourcesDesc(event.source)
         val key = formatKeyEventKeyCode(event.keyCode)
         val action = formatKeyEventAction(event.action)
-        return "$key $action"
+
+        return Spanner().apply {
+            append(event.device.name, Spans.foreground(Color.CYAN))
+            append(" ")
+            append(source, Spans.foreground(Color.BLUE))
+            append(" ")
+            append(key, Spans.foreground(Color.RED))
+            append(" ")
+            append(action, Spans.foreground(Color.GREEN))
+        }
     }
 
     private inline fun formatKeyEventKeyCode(key: Int): String {
