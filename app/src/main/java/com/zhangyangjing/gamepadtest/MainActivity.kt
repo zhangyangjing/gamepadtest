@@ -1,5 +1,6 @@
 package com.zhangyangjing.gamepadtest
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private var mNavNow: Int? = null
+    private var mNavNow: Int = INVALIDATE_ID
     lateinit var gamePadManager: GamePadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +34,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navTo(R.id.nav_camera)
 
         gamePadManager = GamePadManager(this)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        navTo(mNavNow, true)
     }
 
     override fun onResume() {
@@ -61,8 +67,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onKeyDown(keyCode: Int, event: KeyEvent) = gamePadManager.handleEvent(event) || super.onKeyDown(keyCode, event)
     override fun onGenericMotionEvent(event: MotionEvent) = gamePadManager.handleEvent(event) || super.onGenericMotionEvent(event)
 
-    private fun navTo(navId: Int) {
-        takeIf { navId != mNavNow }?.let { mNavNow = navId } ?: return
+    private fun navTo(navId: Int, forceReload: Boolean = false) {
+        takeIf { forceReload || navId != mNavNow }?.let { mNavNow = navId } ?: return
 
         nav_view.setCheckedItem(navId)
         val fragment = when (navId) {
@@ -71,6 +77,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> Fragment()
         }
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commitAllowingStateLoss()
+    }
+
+    companion object {
+        private const val INVALIDATE_ID = -1
     }
 }
 
