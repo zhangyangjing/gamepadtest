@@ -12,10 +12,11 @@ import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
-import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.GamePadListener
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.IGamePadListener
 import kotlinx.android.synthetic.main.fragment_gamepad_viewer.*
 
-class GamePadViewerFragment : Fragment(), GamePadManager.GamePadListener {
+class GamePadViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
     private var host: MainActivity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

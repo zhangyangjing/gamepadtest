@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
+import com.zhangyangjing.gamepadtest.ui.fragment.LogViewerFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setCheckedItem(navId)
         val fragment = when (navId) {
             R.id.nav_camera -> GamePadViewerFragment()
+            R.id.nav_gallery -> LogViewerFragment()
             else -> Fragment()
         }
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commitAllowingStateLoss()

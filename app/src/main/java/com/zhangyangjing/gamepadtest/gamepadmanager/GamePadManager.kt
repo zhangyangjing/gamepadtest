@@ -17,7 +17,7 @@ import java.util.*
 class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     var mGamePads: SortedMap<Int, GamePad>? = null
     private val mInputManager = InputManagerCompat.Factory.getInputManager(mCtx)!!
-    private val mGamPadListeners = LinkedList<GamePadListener>()
+    private val mGamPadListeners = LinkedList<IGamePadListener>()
 
     fun resume() {
         mInputManager.registerInputDeviceListener(this, Handler(Looper.getMainLooper()))
@@ -32,15 +32,16 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
 
     fun handleEvent(event: InputEvent): Boolean {
         Log.v(TAG, "handleEvent: $event ${GamePad.getSourcesDesc(event.source)}")
+        mGamPadListeners.forEach { it.gamePadEvent(event) }
         if (event is MotionEvent) mInputManager.onGenericMotionEvent(event)
         return mGamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: return false
     }
 
-    fun addGamePadListener(gamePadListener: GamePadListener) {
+    fun addGamePadListener(gamePadListener: IGamePadListener) {
         mGamPadListeners.add(gamePadListener)
     }
 
-    fun removeGamePadListener(gamePadListener: GamePadListener) {
+    fun removeGamePadListener(gamePadListener: IGamePadListener) {
         mGamPadListeners.remove(gamePadListener)
     }
 
@@ -58,8 +59,14 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         mGamPadListeners.forEach { it.gamePadUpdate() }
     }
 
-    interface GamePadListener {
+    interface IGamePadListener {
+        fun gamePadEvent(event: InputEvent)
         fun gamePadUpdate()
+    }
+
+    class GamePadListener : IGamePadListener {
+        override fun gamePadEvent(event: InputEvent) {}
+        override fun gamePadUpdate() {}
     }
 
     companion object {

@@ -10,7 +10,7 @@ import com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.widget.Base
 class DPad(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
 
     var direction = 0
-    lateinit var drawables: List<Drawable>
+    private lateinit var drawables: List<Drawable>
 
     override fun onDraw(canvas: Canvas) {
         val d = drawables[direction]
