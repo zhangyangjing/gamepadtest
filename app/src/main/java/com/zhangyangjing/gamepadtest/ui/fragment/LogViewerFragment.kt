@@ -3,10 +3,7 @@ package com.zhangyangjing.gamepadtest.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.InputEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.GamePadListener
@@ -42,6 +39,41 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
     }
 
     override fun gamePadEvent(event: InputEvent) {
-        log_viewer.addMessage(event.toString())
+        event.takeIf { filterEvent(it) }?.let { formatEvent(it) }?.let { log_viewer.addMessage(it) }
+    }
+
+    private fun filterEvent(event: InputEvent): Boolean {
+        return true
+    }
+
+    private inline fun formatEvent(event: InputEvent): String? {
+        return when (event::class) {
+            KeyEvent::class -> formatKeyEvent(event as KeyEvent)
+            MotionEvent::class -> formatMotionEvent(event as MotionEvent)
+            else -> null
+        }
+    }
+
+    private inline fun formatMotionEvent(event: MotionEvent): String {
+        return "MOTION ${event.action}"
+    }
+
+    private inline fun formatKeyEvent(event: KeyEvent): String {
+        val key = formatKeyEventKeyCode(event.keyCode)
+        val action = formatKeyEventAction(event.action)
+        return "$key $action"
+    }
+
+    private inline fun formatKeyEventKeyCode(key: Int): String {
+        return KeyEvent.keyCodeToString(key).substring(8)
+    }
+
+    private inline fun formatKeyEventAction(action: Int): String {
+        return when (action) {
+            KeyEvent.ACTION_UP -> "UP"
+            KeyEvent.ACTION_DOWN -> "DOWN"
+            KeyEvent.ACTION_MULTIPLE -> "MULTIPLE"
+            else -> "UNKNOW"
+        }
     }
 }

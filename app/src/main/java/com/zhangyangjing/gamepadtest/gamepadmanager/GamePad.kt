@@ -13,11 +13,11 @@ import java.util.*
 /**
  * Created by zhangyangjing on 2018/8/4.
  */
-class GamePad(val device: InputDevice) {
+class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
     val btnStates = Array(BTN_COUNT) { false }
     val axisStates = Array(AXIS_COUNT) { 0f }
-    private val mListeners = LinkedList<Listener>()
 
+    private val mListeners = LinkedList<Listener>()
 
     fun addListener(listener: Listener) {
         mListeners.add(listener)
@@ -54,16 +54,18 @@ class GamePad(val device: InputDevice) {
     private fun handleMotionEvent(event: MotionEvent): Boolean {
         sAxisCodeMap.forEach { k, v -> updateAxisState(v, getCenteredAxis(event, k)) }
 
-        updateBtnState(BTN_UP, axisStates[AXIS_HAT_Y] < -0.6)
-        updateBtnState(BTN_DOWN, axisStates[AXIS_HAT_Y] > 0.6)
-        updateBtnState(BTN_LEFT, axisStates[AXIS_HAT_X] < -0.6)
-        updateBtnState(BTN_RIGHT, axisStates[AXIS_HAT_X] > 0.6)
+        if (enableDpadTransform) {
+            updateBtnState(BTN_UP, axisStates[AXIS_HAT_Y] < -0.6)
+            updateBtnState(BTN_DOWN, axisStates[AXIS_HAT_Y] > 0.6)
+            updateBtnState(BTN_LEFT, axisStates[AXIS_HAT_X] < -0.6)
+            updateBtnState(BTN_RIGHT, axisStates[AXIS_HAT_X] > 0.6)
 
-        run {
-            updateBtnState(BTN_UP, btnStates[BTN_UP] || axisStates[AXIS_Y] < -0.6)
-            updateBtnState(BTN_DOWN, btnStates[BTN_DOWN] || axisStates[AXIS_Y] > 0.6)
-            updateBtnState(BTN_LEFT, btnStates[BTN_LEFT] || axisStates[AXIS_X] < -0.6)
-            updateBtnState(BTN_RIGHT, btnStates[BTN_RIGHT] || axisStates[AXIS_X] > 0.6)
+            run {
+                updateBtnState(BTN_UP, btnStates[BTN_UP] || axisStates[AXIS_Y] < -0.6)
+                updateBtnState(BTN_DOWN, btnStates[BTN_DOWN] || axisStates[AXIS_Y] > 0.6)
+                updateBtnState(BTN_LEFT, btnStates[BTN_LEFT] || axisStates[AXIS_X] < -0.6)
+                updateBtnState(BTN_RIGHT, btnStates[BTN_RIGHT] || axisStates[AXIS_X] > 0.6)
+            }
         }
 
         return true

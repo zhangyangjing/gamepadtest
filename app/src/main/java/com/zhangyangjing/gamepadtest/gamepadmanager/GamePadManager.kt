@@ -15,7 +15,14 @@ import java.util.*
  * Created by zhangyangjing on 2018/8/4.
  */
 class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
-    var mGamePads: SortedMap<Int, GamePad>? = null
+    var gamePads: SortedMap<Int, GamePad>? = null
+    val enableKeyEventIntercept = true
+    var enableDpadTransform = true
+        set(value) {
+            field = value
+            gamePads?.forEach { _, gamePad ->  gamePad.enableDpadTransform = value}
+        }
+
     private val mInputManager = InputManagerCompat.Factory.getInputManager(mCtx)!!
     private val mGamPadListeners = LinkedList<IGamePadListener>()
 
@@ -34,7 +41,7 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         Log.v(TAG, "handleEvent: $event ${GamePad.getSourcesDesc(event.source)}")
         mGamPadListeners.forEach { it.gamePadEvent(event) }
         if (event is MotionEvent) mInputManager.onGenericMotionEvent(event)
-        return mGamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: return false
+        return enableKeyEventIntercept && gamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: return false
     }
 
     fun addGamePadListener(gamePadListener: IGamePadListener) {
@@ -50,10 +57,10 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     override fun onInputDeviceRemoved(deviceId: Int) = updateGamePads()
 
     private fun updateGamePads() {
-        mGamePads = mInputManager.inputDeviceIds
+        gamePads = mInputManager.inputDeviceIds
                 .map { mInputManager.getInputDevice(it) }
                 .filter { isSource(it.sources, SOURCE_GAMEPAD) || isSource(it.sources, SOURCE_JOYSTICK) }
-                .map { it.id to GamePad(it) }
+                .map { it.id to GamePad(it, enableDpadTransform) }
                 .toMap()
                 .toSortedMap()
         mGamPadListeners.forEach { it.gamePadUpdate() }

@@ -53,6 +53,6 @@ class GamePadViewerFragment : Fragment(), IGamePadListener by GamePadListener() 
     }
 
     override fun gamePadUpdate() {
-        (list.adapter as GamePadAdapter).gamePads = host?.gamePadManager?.mGamePads?.values?.toList()
+        (list.adapter as GamePadAdapter).gamePads = host?.gamePadManager?.gamePads?.values?.toList()
     }
 }
