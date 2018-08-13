@@ -40,6 +40,10 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         mGamPadListeners.add(gamePadListener)
     }
 
+    fun removeGamePadListener(gamePadListener: GamePadListener) {
+        mGamPadListeners.remove(gamePadListener)
+    }
+
     override fun onInputDeviceAdded(deviceId: Int) = updateGamePads()
     override fun onInputDeviceChanged(deviceId: Int) = updateGamePads()
     override fun onInputDeviceRemoved(deviceId: Int) = updateGamePads()

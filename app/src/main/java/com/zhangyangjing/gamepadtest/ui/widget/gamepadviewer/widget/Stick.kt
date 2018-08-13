@@ -1,4 +1,4 @@
-package com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget
+package com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.zhangyangjing.gamepadtest.R
+import com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.widget.Base
 
 class Stick(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
     private val TAG = Stick::class.java.simpleName
@@ -36,7 +37,7 @@ class Stick(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Floa
         rectSmall.top += shrink
         rectSmall.bottom -= shrink
 
-        val offsetMax = (rect.width() - rectSmall.width())  / 2
+        val offsetMax = (rect.width() - rectSmall.width()) / 2
         val offsetX = (offsetMax * axisX).toInt()
         val offsetY = (offsetMax * axisY).toInt()
         rectSmall.offset(offsetX, offsetY)

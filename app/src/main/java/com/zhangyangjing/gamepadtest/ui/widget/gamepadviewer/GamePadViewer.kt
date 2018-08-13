@@ -1,4 +1,4 @@
-package com.zhangyangjing.gamepadtest.widget.gamepadviewer
+package com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer
 
 import android.content.Context
 import android.content.res.Configuration
@@ -33,8 +33,8 @@ import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_THUMBR
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_UP
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_X
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.BTN_Y
-import com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget.*
-
+import com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.widget.AnalogButton
+import com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.widget.Base
 import java.util.*
 import kotlin.math.max
 

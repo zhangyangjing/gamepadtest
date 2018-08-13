@@ -1,4 +1,4 @@
-package com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget
+package com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.widget
 
 import android.content.Context
 import android.graphics.Canvas

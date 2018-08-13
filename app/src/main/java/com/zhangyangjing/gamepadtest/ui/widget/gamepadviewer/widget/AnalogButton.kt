@@ -1,4 +1,4 @@
-package com.zhangyangjing.gamepadtest.widget.gamepadviewer.widget
+package com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.widget
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,8 +8,8 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.zhangyangjing.gamepadtest.R
-import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_ANALOG_BTN_L2
-import com.zhangyangjing.gamepadtest.widget.gamepadviewer.GamePadViewer.Companion.WGT_ANALOG_BTN_R2
+import com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.GamePadViewer.Companion.WGT_ANALOG_BTN_L2
+import com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer.GamePadViewer.Companion.WGT_ANALOG_BTN_R2
 
 class AnalogButton(ctx: Context, code: Int, centerX: Float, centerY: Float, width: Float, height: Float) : Base(ctx, code, centerX, centerY, width, height) {
     private lateinit var drawableNormal: Drawable
