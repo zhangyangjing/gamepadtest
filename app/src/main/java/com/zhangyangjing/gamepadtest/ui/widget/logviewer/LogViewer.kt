@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import kotlin.math.max
 
 /**
  * Created by zhangyangjing on 2018/8/13.
@@ -17,7 +18,7 @@ class LogViewer(context: Context, attrs: AttributeSet, private val mAdapter: Log
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onChanged() {
                 super.onChanged()
-                smoothScrollToPosition(adapter.itemCount - 1)
+                smoothScrollToPosition(max(adapter.itemCount - 1, 0))
             }
         })
     }

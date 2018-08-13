@@ -13,6 +13,11 @@ import kotlinx.android.synthetic.main.fragment_log_viewer.*
 class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
     private var host: MainActivity? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_log_viewer, container, false)
     }
@@ -40,6 +45,18 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
 
     override fun gamePadEvent(event: InputEvent) {
         event.takeIf { filterEvent(it) }?.let { formatEvent(it) }?.let { log_viewer.addMessage(it) }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.log_ops, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item_clear -> { log_viewer.clearMessage(); true }
+            R.id.item_add_splitter -> { log_viewer.addMessage("-------------------");  true }
+            else -> false
+        }
     }
 
     private fun filterEvent(event: InputEvent): Boolean {
