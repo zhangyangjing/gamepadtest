@@ -25,9 +25,9 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
 
     fun handleEvent(event: InputEvent): Boolean {
         dump()
-        return when (event::class) {
-            KeyEvent::class -> handleKeyEvent(event as KeyEvent)
-            MotionEvent::class -> handleMotionEvent(event as MotionEvent)
+        return when (event) {
+            is KeyEvent -> handleKeyEvent(event)
+            is MotionEvent -> handleMotionEvent(event)
             else -> false
         }
     }
@@ -205,11 +205,7 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
                 Pair(AXIS_THROTTLE, "AXIS_THROTTLE"),
                 Pair(AXIS_BRAKE, "AXIS_BRAKE"))
 
-        fun getSourcesDesc(sources: Int): String {
-            return sSources.filter { it and sources == it }.joinToString {
-                sSourceNames[it] ?: "unknow"
-            }
-        }
+        fun getSourcesDesc(sources: Int) = sSources.filter { it and sources == it }.joinToString { sSourceNames[it] ?: "unknow" }
 
         private val sSources = listOf(
                 SOURCE_DPAD, SOURCE_GAMEPAD, SOURCE_HDMI, SOURCE_JOYSTICK, SOURCE_KEYBOARD,

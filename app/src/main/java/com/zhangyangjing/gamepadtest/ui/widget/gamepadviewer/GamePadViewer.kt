@@ -117,11 +117,11 @@ class GamePadViewer : View, GamePad.Listener {
     }
 
     private fun updateWidgetState(widget: Base, gamePad: GamePad) {
-        when (widget::class) {
-            Button::class -> { updateBtnState(gamePad, widget as Button) }
-            AnalogButton::class -> { updateAnalogBtnState(gamePad, widget as AnalogButton) }
-            Stick::class -> { updateStickState(gamePad, widget as Stick) }
-            DPad::class -> { updateDpadState(gamePad, widget as DPad) }
+        when (widget) {
+            is Button -> { updateBtnState(gamePad, widget) }
+            is AnalogButton -> { updateAnalogBtnState(gamePad, widget) }
+            is Stick -> { updateStickState(gamePad, widget) }
+            is DPad -> { updateDpadState(gamePad, widget) }
         }
     }
 

@@ -72,28 +72,23 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
         }
     }
 
-    private fun filterEvent(event: InputEvent): Boolean {
-        return when (event) {
+    private fun filterEvent(event: InputEvent) = when (event) {
             is KeyEvent -> mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_KEY_EVENT, true)
             is MotionEvent -> mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_MOTION_EVENT, true)
             else -> false
-        }
     }
 
-    private inline fun formatEvent(event: InputEvent): CharSequence? {
-        return when (event::class) {
-            KeyEvent::class -> formatKeyEvent(event as KeyEvent)
-            MotionEvent::class -> formatMotionEvent(event as MotionEvent)
+    private inline fun formatEvent(event: InputEvent) = when (event) {
+            is KeyEvent -> formatKeyEvent(event)
+            is MotionEvent -> formatMotionEvent(event)
             else -> null
-        }
     }
 
     private inline fun formatMotionEvent(event: MotionEvent): String {
         return "MOTION ${event.action}"
     }
 
-    private inline fun formatKeyEvent(event: KeyEvent): Spanner {
-        return LOG_LABS
+    private inline fun formatKeyEvent(event: KeyEvent) = LOG_LABS
                 .filter { mPref.getBoolean(it.first, it.second) }
                 .map { getKeyEventDesc(event, it.first) }
                 .reduce { sum, ele  -> sum.append(" ").append(ele) }
@@ -101,33 +96,24 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
                 .append(formatKeyEventKeyCode(event.keyCode), Spans.foreground(Color.RED))
                 .append(" ")
                 .append(formatKeyEventAction(event.action), Spans.foreground(Color.GREEN))
-    }
 
-    private inline fun getKeyEventDesc(event: KeyEvent, lab: String): Spanner {
-        return when (lab) {
+    private inline fun getKeyEventDesc(event: KeyEvent, lab: String) = when (lab) {
             PREF_KEY_LOG_LAB_TIME -> Spanner().append(formatCurrentTime(), Spans.foreground(Color.BLUE))
             PREF_KEY_LOG_LAB_ID -> Spanner().append(event.device.id.toString(), Spans.foreground(Color.MAGENTA))
             PREF_KEY_LOG_LAB_NAME -> Spanner().append(event.device.name, Spans.foreground(Color.CYAN))
             PREF_KEY_LOG_LAB_SOURCE -> Spanner().append(GamePad.getSourcesDesc(event.source), Spans.foreground(Color.YELLOW))
             else -> Spanner()
-        }
     }
 
-    private inline fun formatCurrentTime(): String {
-        return DateFormat.format("hh:mm:ss.SSS", System.currentTimeMillis()).toString()
-    }
+    private inline fun formatCurrentTime() = DateFormat.format("hh:mm:ss.SSS", System.currentTimeMillis()).toString()
 
-    private inline fun formatKeyEventKeyCode(key: Int): String {
-        return KeyEvent.keyCodeToString(key).substring(8)
-    }
+    private inline fun formatKeyEventKeyCode(key: Int) = KeyEvent.keyCodeToString(key).substring(8)
 
-    private inline fun formatKeyEventAction(action: Int): String {
-        return when (action) {
+    private inline fun formatKeyEventAction(action: Int) = when (action) {
             KeyEvent.ACTION_UP -> "UP"
             KeyEvent.ACTION_DOWN -> "DOWN"
             KeyEvent.ACTION_MULTIPLE -> "MULTIPLE"
             else -> "UNKNOWN"
-        }
     }
 
     companion object {
