@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="手柄设置">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_intercept_key_event"
+            android:title="禁用系统后续处理"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_transform_stick"
+            android:title="转换摇杆数据到方向键"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="日志来源">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_log_enable_key_event"
+            android:title="按键"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_log_enable_motion_event"
+            android:title="摇杆"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="日志显示">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_log_lab_time"
+            android:title="事件时间"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_log_lab_id"
+            android:title="手柄 ID"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_log_lab_name"
+            android:title="手柄 Name"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_log_lab_source"
+            android:title="手柄 Source"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="手柄显示">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_pad_lab_id"
+            android:title="手柄 ID"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_pad_lab_name"
+            android:title="手柄 Name"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_pad_lab_source"
+            android:title="手柄 Source"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_pad_lab_desc"
+            android:title="手柄 Desc"/>
+    </PreferenceCategory>
+</PreferenceScreen>

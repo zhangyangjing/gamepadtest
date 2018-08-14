@@ -16,7 +16,7 @@ import java.util.*
  */
 class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     var gamePads: SortedMap<Int, GamePad>? = null
-    val enableKeyEventIntercept = true
+    var enableKeyEventIntercept = true
     var enableDpadTransform = true
         set(value) {
             field = value
@@ -41,7 +41,7 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         Log.v(TAG, "handleEvent: $event ${GamePad.getSourcesDesc(event.source)}")
         mGamPadListeners.forEach { it.gamePadEvent(event) }
         if (event is MotionEvent) mInputManager.onGenericMotionEvent(event)
-        return enableKeyEventIntercept && gamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: return false
+        return (gamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: false) && enableKeyEventIntercept
     }
 
     fun addGamePadListener(gamePadListener: IGamePadListener) {

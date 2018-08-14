@@ -1,5 +1,7 @@
 package com.zhangyangjing.gamepadtest
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -12,13 +14,18 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
 import com.zhangyangjing.gamepadtest.ui.fragment.LogViewerFragment
+import com.zhangyangjing.gamepadtest.ui.fragment.SettingFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerFragment
+import com.zhangyangjing.gamepadtest.util.Settings
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+
     private var mNavNow: Int = INVALIDATE_ID
+    private lateinit var mPref: SharedPreferences
+
     lateinit var gamePadManager: GamePadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +41,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navTo(R.id.nav_camera)
 
         gamePadManager = GamePadManager(this)
+
+        mPref = getSharedPreferences(Settings.PREF_NAME, Context.MODE_PRIVATE)
+        updateGamePadManagerSettings()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -44,11 +54,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         gamePadManager.resume()
+        mPref.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
         gamePadManager.pause()
+        mPref.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onBackPressed() {
@@ -63,9 +75,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
+        updateGamePadManagerSettings()
+    }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent) = gamePadManager.handleEvent(event) || super.onKeyUp(keyCode, event)
     override fun onKeyDown(keyCode: Int, event: KeyEvent) = gamePadManager.handleEvent(event) || super.onKeyDown(keyCode, event)
     override fun onGenericMotionEvent(event: MotionEvent) = gamePadManager.handleEvent(event) || super.onGenericMotionEvent(event)
+
+    private fun updateGamePadManagerSettings() {
+        gamePadManager.enableDpadTransform = mPref.getBoolean(Settings.PREF_KEY_TRANSFORM_STICK, true)
+        gamePadManager.enableKeyEventIntercept = mPref.getBoolean(Settings.PREF_KEY_INTERCEPT_KEY_EVENT, true)
+    }
 
     private fun navTo(navId: Int, forceReload: Boolean = false) {
         takeIf { forceReload || navId != mNavNow }?.let { mNavNow = navId } ?: return
@@ -74,6 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val fragment = when (navId) {
             R.id.nav_camera -> GamePadViewerFragment()
             R.id.nav_gallery -> LogViewerFragment()
+            R.id.nav_slideshow -> SettingFragment()
             else -> Fragment()
         }
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commitAllowingStateLoss()

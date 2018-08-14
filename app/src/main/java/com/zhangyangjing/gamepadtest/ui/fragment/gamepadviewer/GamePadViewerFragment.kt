@@ -27,7 +27,7 @@ class GamePadViewerFragment : Fragment(), IGamePadListener by GamePadListener() 
         super.onViewCreated(view, savedInstanceState)
         val orientation = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) VERTICAL else HORIZONTAL
         list.layoutManager = LinearLayoutManager(context, orientation, false)
-        list.adapter = GamePadAdapter()
+        list.adapter = GamePadAdapter(context!!)
     }
 
     override fun onStart() {
