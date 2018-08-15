@@ -75,14 +75,14 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
         if (state == btnStates[code])
             return
         btnStates[code] = state
-        mListeners.forEach { it.onStateUpdate(TYPE_BTN, code) }
+        mListeners.forEach { it.onStateUpdate(this, TYPE_BTN, code) }
     }
 
     private inline fun updateAxisState(code: Int, state: Float) {
         if (state == axisStates[code])
             return
         axisStates[code] = state
-        mListeners.forEach { it.onStateUpdate(TYPE_AXIS, code) }
+        mListeners.forEach { it.onStateUpdate(this, TYPE_AXIS, code) }
     }
 
     private fun getCenteredAxis(event: MotionEvent, axis: Int): Float {
@@ -102,7 +102,7 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
 
     interface Listener {
         fun onBtnClick(code: Int)
-        fun onStateUpdate(type: Int, code: Int)
+        fun onStateUpdate(gamePad: GamePad, type: Int, code: Int)
     }
 
     companion object {

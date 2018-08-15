@@ -55,7 +55,7 @@ class GamePadViewer : View, GamePad.Listener {
         initWidgets()
     }
 
-    override fun onStateUpdate(type: Int, code: Int) {
+    override fun onStateUpdate(gamePad: GamePad, type: Int, code: Int) {
         ViewCompat.postInvalidateOnAnimation(this)
     }
 

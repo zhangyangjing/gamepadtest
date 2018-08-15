@@ -10,6 +10,7 @@ import android.view.*
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.TYPE_AXIS
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.GamePadListener
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.IGamePadListener
 import com.zhangyangjing.gamepadtest.util.Settings
@@ -21,7 +22,8 @@ import kotlinx.android.synthetic.main.fragment_log_viewer.*
 import lt.neworld.spanner.Spanner
 import lt.neworld.spanner.Spans
 
-class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
+class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), GamePad.Listener {
+
     private var host: MainActivity? = null
     private lateinit var mPref: SharedPreferences
 
@@ -38,6 +40,7 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
     override fun onStart() {
         super.onStart()
         host?.gamePadManager?.addGamePadListener(this)
+        registGamePad()
     }
 
     override fun onStop() {
@@ -56,8 +59,34 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
         host = null
     }
 
+    override fun gamePadUpdate() {
+        registGamePad()
+    }
+
     override fun gamePadEvent(event: InputEvent) {
-        event.takeIf { filterEvent(it) }?.let { formatEvent(it) }?.let { log_viewer.addMessage(it) }
+        val isKeyEvent = event is KeyEvent
+        val enableKeyEvent = mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_KEY_EVENT, true)
+        if (!isKeyEvent || !enableKeyEvent)
+            return
+
+        val message = formatKeyEvent(event as KeyEvent)
+        log_viewer.addMessage(message)
+    }
+
+    override fun onStateUpdate(gamePad: GamePad, type: Int, code: Int) {
+        if (TYPE_AXIS != type)
+            return
+
+        val enableMotionEvent = mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_KEY_EVENT, true)
+        if (!enableMotionEvent)
+            return
+
+        val value = gamePad.axisStates[code]
+        val message = formatMotionEvent(gamePad.device, gamePad.device.sources, code, value)
+        log_viewer.addMessage(message)
+    }
+
+    override fun onBtnClick(code: Int) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,43 +95,39 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.item_clear -> { log_viewer.clearMessage(); true }
-            R.id.item_add_splitter -> { log_viewer.addMessage("-------------------");  true }
+            R.id.item_clear -> {
+                log_viewer.clearMessage(); true
+            }
+            R.id.item_add_splitter -> {
+                log_viewer.addMessage("-------------------"); true
+            }
             else -> false
         }
     }
 
-    private fun filterEvent(event: InputEvent) = when (event) {
-            is KeyEvent -> mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_KEY_EVENT, true)
-            is MotionEvent -> mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_MOTION_EVENT, true)
-            else -> false
-    }
-
-    private inline fun formatEvent(event: InputEvent) = when (event) {
-            is KeyEvent -> formatKeyEvent(event)
-            is MotionEvent -> formatMotionEvent(event)
-            else -> null
-    }
-
-    private inline fun formatMotionEvent(event: MotionEvent): String {
-        return "MOTION ${event.action}"
-    }
-
-    private inline fun formatKeyEvent(event: KeyEvent) = LOG_LABS
-                .filter { mPref.getBoolean(it.first, it.second) }
-                .map { getKeyEventDesc(event, it.first) }
-                .reduce { sum, ele  -> sum.append(" ").append(ele) }
+    private inline fun formatKeyEvent(event: KeyEvent) = geEventDesc(event.device, event.source)
                 .append(" ")
                 .append(formatKeyEventKeyCode(event.keyCode), Spans.foreground(Color.RED))
                 .append(" ")
                 .append(formatKeyEventAction(event.action), Spans.foreground(Color.GREEN))
 
-    private inline fun getKeyEventDesc(event: KeyEvent, lab: String) = when (lab) {
-            PREF_KEY_LOG_LAB_TIME -> Spanner().append(formatCurrentTime(), Spans.foreground(Color.BLUE))
-            PREF_KEY_LOG_LAB_ID -> Spanner().append(event.device.id.toString(), Spans.foreground(Color.MAGENTA))
-            PREF_KEY_LOG_LAB_NAME -> Spanner().append(event.device.name, Spans.foreground(Color.CYAN))
-            PREF_KEY_LOG_LAB_SOURCE -> Spanner().append(GamePad.getSourcesDesc(event.source), Spans.foreground(Color.YELLOW))
-            else -> Spanner()
+    private inline fun formatMotionEvent(device: InputDevice, source: Int, code: Int, value: Float) = geEventDesc(device, source)
+            .append(" ")
+            .append(GamePad.sAxisNameMap[code], Spans.foreground(Color.RED))
+            .append(" ")
+            .append(value.toString(), Spans.foreground(Color.GREEN))
+
+    private inline fun geEventDesc(device: InputDevice, source: Int) = LOG_LABS
+                .filter { mPref.getBoolean(it.first, it.second) }
+                .map { getLabelDesc(device, source, it.first) }
+                .reduce { sum, ele -> sum.append(" ").append(ele) }
+
+    private inline fun getLabelDesc(device: InputDevice, source: Int, lab: String) = when (lab) {
+        PREF_KEY_LOG_LAB_TIME -> Spanner().append(formatCurrentTime(), Spans.foreground(Color.BLUE))
+        PREF_KEY_LOG_LAB_ID -> Spanner().append(device.id.toString(), Spans.foreground(Color.MAGENTA))
+        PREF_KEY_LOG_LAB_NAME -> Spanner().append(device.name, Spans.foreground(Color.CYAN))
+        PREF_KEY_LOG_LAB_SOURCE -> Spanner().append(GamePad.getSourcesDesc(source), Spans.foreground(Color.YELLOW))
+        else -> Spanner()
     }
 
     private inline fun formatCurrentTime() = DateFormat.format("hh:mm:ss.SSS", System.currentTimeMillis()).toString()
@@ -110,10 +135,14 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener() {
     private inline fun formatKeyEventKeyCode(key: Int) = KeyEvent.keyCodeToString(key).substring(8)
 
     private inline fun formatKeyEventAction(action: Int) = when (action) {
-            KeyEvent.ACTION_UP -> "UP"
-            KeyEvent.ACTION_DOWN -> "DOWN"
-            KeyEvent.ACTION_MULTIPLE -> "MULTIPLE"
-            else -> "UNKNOWN"
+        KeyEvent.ACTION_UP -> "UP"
+        KeyEvent.ACTION_DOWN -> "DOWN"
+        KeyEvent.ACTION_MULTIPLE -> "MULTIPLE"
+        else -> "UNKNOWN"
+    }
+
+    private fun registGamePad() {
+        host?.gamePadManager?.gamePads?.forEach { it.value.addListener(this) }
     }
 
     companion object {
