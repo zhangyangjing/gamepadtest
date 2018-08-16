@@ -40,12 +40,13 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
     override fun onStart() {
         super.onStart()
         host?.gamePadManager?.addGamePadListener(this)
-        registGamePad()
+        registerGamePad()
     }
 
     override fun onStop() {
         super.onStop()
         host?.gamePadManager?.removeGamePadListener(this)
+        unregistGamePad()
     }
 
     override fun onAttach(context: Context?) {
@@ -60,7 +61,7 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
     }
 
     override fun gamePadUpdate() {
-        registGamePad()
+        registerGamePad()
     }
 
     override fun gamePadEvent(event: InputEvent) {
@@ -141,8 +142,12 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
         else -> "UNKNOWN"
     }
 
-    private fun registGamePad() {
+    private fun registerGamePad() {
         host?.gamePadManager?.gamePads?.forEach { it.value.addListener(this) }
+    }
+
+    private fun unregistGamePad() {
+        host?.gamePadManager?.gamePads?.forEach { it.value.removeListener(this) }
     }
 
     companion object {

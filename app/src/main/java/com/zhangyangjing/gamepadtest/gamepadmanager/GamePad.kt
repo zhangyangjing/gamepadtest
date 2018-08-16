@@ -23,6 +23,10 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
         mListeners.add(listener)
     }
 
+    fun removeListener(listener: Listener) {
+        mListeners.remove(listener)
+    }
+
     fun handleEvent(event: InputEvent): Boolean {
         dump()
         return when (event) {
