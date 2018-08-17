@@ -23,7 +23,7 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
 
     var gamePads: SortedMap<Int, GamePad> = sortedMapOf()
     private val mInputManager = InputManagerCompat.Factory.getInputManager(mCtx)!!
-    private val mGamPadListeners = LinkedList<IGamePadListener>()
+    private val mGamPadListeners = LinkedList<IListener>()
 
     init {
         ensureGamePads()
@@ -46,12 +46,12 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         return (gamePads[event.deviceId]?.let { it.handleEvent(event) } ?: false) && enableKeyEventIntercept
     }
 
-    fun addGamePadListener(gamePadListener: IGamePadListener) {
-        mGamPadListeners.add(gamePadListener)
+    fun addGamePadListener(listener: IListener) {
+        mGamPadListeners.add(listener)
     }
 
-    fun removeGamePadListener(gamePadListener: IGamePadListener) {
-        mGamPadListeners.remove(gamePadListener)
+    fun removeGamePadListener(listener: IListener) {
+        mGamPadListeners.remove(listener)
     }
 
     override fun onInputDeviceAdded(deviceId: Int) {
@@ -87,14 +87,14 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         inputDeviceIds.minus(gamePads.keys).forEach { onInputDeviceAdded(it) }
     }
 
-    interface IGamePadListener {
+    interface IListener {
         fun gamePadEvent(event: InputEvent)
         fun gamePadAdded(gamePad: GamePad)
         fun gamePadChanged(gamePad: GamePad)
         fun gamePadRemoved(gamePad: GamePad)
     }
 
-    class GamePadListener : IGamePadListener {
+    class Listener : IListener {
         override fun gamePadEvent(event: InputEvent) {}
         override fun gamePadAdded(gamePad: GamePad) {}
         override fun gamePadChanged(gamePad: GamePad) {}

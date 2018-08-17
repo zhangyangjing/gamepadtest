@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.gamepadviewer.GamePadViewerFragment">
+    tools:context=".ui.fragment.gamepadviewer.ViewerFragment">
 
     <com.zhangyangjing.gamepadtest.ui.widget.logviewer.LogViewer
         android:id="@+id/log_viewer"

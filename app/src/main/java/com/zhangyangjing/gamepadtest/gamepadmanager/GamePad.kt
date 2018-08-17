@@ -17,13 +17,13 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
     val btnStates = Array(BTN_COUNT) { false }
     val axisStates = Array(AXIS_COUNT) { 0f }
 
-    private val mListeners = LinkedList<Listener>()
+    private val mListeners = LinkedList<IListener>()
 
-    fun addListener(listener: Listener) {
+    fun addListener(listener: IListener) {
         mListeners.add(listener)
     }
 
-    fun removeListener(listener: Listener) {
+    fun removeListener(listener: IListener) {
         mListeners.remove(listener)
     }
 
@@ -46,7 +46,7 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
                 ACTION_UP -> {
                     updateBtnState(code, false)
                     takeIf { 200 > event.eventTime - event.downTime }?.apply {
-                        mListeners.forEach { it.onBtnClick(code) }
+                        mListeners.forEach { it.onGamePadClick(this, code) }
                     }
                     true
                 }
@@ -79,14 +79,14 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
         if (state == btnStates[code])
             return
         btnStates[code] = state
-        mListeners.forEach { it.onStateUpdate(this, TYPE_BTN, code) }
+        mListeners.forEach { it.onGamePadStateUpdate(this, TYPE_BTN, code) }
     }
 
     private inline fun updateAxisState(code: Int, state: Float) {
         if (state == axisStates[code])
             return
         axisStates[code] = state
-        mListeners.forEach { it.onStateUpdate(this, TYPE_AXIS, code) }
+        mListeners.forEach { it.onGamePadStateUpdate(this, TYPE_AXIS, code) }
     }
 
     private fun getCenteredAxis(event: MotionEvent, axis: Int): Float {
@@ -104,9 +104,14 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
         Log.v(TAG, btnStates.mapIndexed { i, v -> "${sBtnNameMap[i]}:${if(v) "t" else "f"}" }.joinToString())
     }
 
-    interface Listener {
-        fun onBtnClick(code: Int)
-        fun onStateUpdate(gamePad: GamePad, type: Int, code: Int)
+    interface IListener {
+        fun onGamePadClick(gamePad: GamePad, code: Int)
+        fun onGamePadStateUpdate(gamePad: GamePad, type: Int, code: Int)
+    }
+
+    class Listener : IListener {
+        override fun onGamePadClick(gamePad: GamePad, code: Int) {}
+        override fun onGamePadStateUpdate(gamePad: GamePad, type: Int, code: Int) {}
     }
 
     companion object {

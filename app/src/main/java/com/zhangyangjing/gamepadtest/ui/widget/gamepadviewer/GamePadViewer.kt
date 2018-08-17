@@ -41,7 +41,7 @@ import kotlin.math.max
 /**
  * Created by zhangyangjing on 2018/7/31.
  */
-class GamePadViewer : View, GamePad.Listener {
+class GamePadViewer : View, GamePad.IListener {
     private val widgets = LinkedList<Base>()
 
     var gamePad: GamePad? = null
@@ -55,11 +55,12 @@ class GamePadViewer : View, GamePad.Listener {
         initWidgets()
     }
 
-    override fun onStateUpdate(gamePad: GamePad, type: Int, code: Int) {
+    override fun onGamePadStateUpdate(gamePad: GamePad, type: Int, code: Int) {
         ViewCompat.postInvalidateOnAnimation(this)
+
     }
 
-    override fun onBtnClick(code: Int) {
+    override fun onGamePadClick(gamePad: GamePad, code: Int) {
         ViewCompat.postInvalidateOnAnimation(this)
     }
 

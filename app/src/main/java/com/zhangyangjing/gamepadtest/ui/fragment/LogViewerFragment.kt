@@ -11,8 +11,7 @@ import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.TYPE_AXIS
-import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.GamePadListener
-import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.IGamePadListener
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
 import com.zhangyangjing.gamepadtest.util.Settings
 import com.zhangyangjing.gamepadtest.util.Settings.Companion.PREF_KEY_LOG_LAB_ID
 import com.zhangyangjing.gamepadtest.util.Settings.Companion.PREF_KEY_LOG_LAB_NAME
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_log_viewer.*
 import lt.neworld.spanner.Spanner
 import lt.neworld.spanner.Spans
 
-class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), GamePad.Listener {
+class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager.Listener(), GamePad.IListener by GamePad.Listener() {
 
     private var host: MainActivity? = null
     private lateinit var mPref: SharedPreferences
@@ -73,7 +72,7 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
         log_viewer.addMessage(message)
     }
 
-    override fun onStateUpdate(gamePad: GamePad, type: Int, code: Int) {
+    override fun onGamePadStateUpdate(gamePad: GamePad, type: Int, code: Int) {
         if (TYPE_AXIS != type)
             return
 
@@ -84,9 +83,6 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
         val value = gamePad.axisStates[code]
         val message = formatMotionEvent(gamePad.device, gamePad.device.sources, code, value)
         log_viewer.addMessage(message)
-    }
-
-    override fun onBtnClick(code: Int) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -106,10 +102,10 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
     }
 
     private inline fun formatKeyEvent(event: KeyEvent) = geEventDesc(event.device, event.source)
-                .append(" ")
-                .append(formatKeyEventKeyCode(event.keyCode), Spans.foreground(Color.RED))
-                .append(" ")
-                .append(formatKeyEventAction(event.action), Spans.foreground(Color.GREEN))
+            .append(" ")
+            .append(formatKeyEventKeyCode(event.keyCode), Spans.foreground(Color.RED))
+            .append(" ")
+            .append(formatKeyEventAction(event.action), Spans.foreground(Color.GREEN))
 
     private inline fun formatMotionEvent(device: InputDevice, source: Int, code: Int, value: Float) = geEventDesc(device, source)
             .append(" ")
@@ -118,9 +114,9 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
             .append(value.toString(), Spans.foreground(Color.GREEN))
 
     private inline fun geEventDesc(device: InputDevice, source: Int) = LOG_LABS
-                .filter { mPref.getBoolean(it.first, it.second) }
-                .map { getLabelDesc(device, source, it.first) }
-                .reduce { sum, ele -> sum.append(" ").append(ele) }
+            .filter { mPref.getBoolean(it.first, it.second) }
+            .map { getLabelDesc(device, source, it.first) }
+            .reduce { sum, ele -> sum.append(" ").append(ele) }
 
     private inline fun getLabelDesc(device: InputDevice, source: Int, lab: String) = when (lab) {
         PREF_KEY_LOG_LAB_TIME -> Spanner().append(formatCurrentTime(), Spans.foreground(Color.BLUE))
