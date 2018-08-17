@@ -12,6 +12,7 @@ import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
+import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.GamePadListener
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager.IGamePadListener
 import kotlinx.android.synthetic.main.fragment_gamepad_viewer.*
@@ -52,7 +53,15 @@ class GamePadViewerFragment : Fragment(), IGamePadListener by GamePadListener() 
         host = null
     }
 
-    override fun gamePadUpdate() {
+    override fun gamePadAdded(gamePad: GamePad) {
+        gamePadUpdate()
+    }
+
+    override fun gamePadRemoved(gamePad: GamePad) {
+        gamePadUpdate()
+    }
+
+    private fun gamePadUpdate() {
         (list.adapter as GamePadAdapter).gamePads = host?.gamePadManager?.gamePads?.values?.toList()
     }
 }

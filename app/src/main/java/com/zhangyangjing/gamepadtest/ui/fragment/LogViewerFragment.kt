@@ -46,7 +46,7 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
     override fun onStop() {
         super.onStop()
         host?.gamePadManager?.removeGamePadListener(this)
-        unregistGamePad()
+        unregisterGamePad()
     }
 
     override fun onAttach(context: Context?) {
@@ -60,9 +60,8 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
         host = null
     }
 
-    override fun gamePadUpdate() {
-        registerGamePad()
-    }
+    override fun gamePadAdded(gamePad: GamePad) = gamePad.addListener(this)
+    override fun gamePadRemoved(gamePad: GamePad) = gamePad.removeListener(this)
 
     override fun gamePadEvent(event: InputEvent) {
         val isKeyEvent = event is KeyEvent
@@ -146,7 +145,7 @@ class LogViewerFragment : Fragment(), IGamePadListener by GamePadListener(), Gam
         host?.gamePadManager?.gamePads?.forEach { it.value.addListener(this) }
     }
 
-    private fun unregistGamePad() {
+    private fun unregisterGamePad() {
         host?.gamePadManager?.gamePads?.forEach { it.value.removeListener(this) }
     }
 

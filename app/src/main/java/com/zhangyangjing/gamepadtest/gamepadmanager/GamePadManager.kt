@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.view.InputDeviceCompat.SOURCE_GAMEPAD
 import android.support.v4.view.InputDeviceCompat.SOURCE_JOYSTICK
-import android.util.Log
 import android.view.InputEvent
 import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.inputmanagercompat.InputManagerCompat
@@ -15,21 +14,25 @@ import java.util.*
  * Created by zhangyangjing on 2018/8/4.
  */
 class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
-    var gamePads: SortedMap<Int, GamePad>? = null
     var enableKeyEventIntercept = true
     var enableDpadTransform = true
         set(value) {
             field = value
-            gamePads?.forEach { _, gamePad ->  gamePad.enableDpadTransform = value}
+            gamePads.forEach { _, gamePad ->  gamePad.enableDpadTransform = value}
         }
 
+    var gamePads: SortedMap<Int, GamePad> = sortedMapOf()
     private val mInputManager = InputManagerCompat.Factory.getInputManager(mCtx)!!
     private val mGamPadListeners = LinkedList<IGamePadListener>()
+
+    init {
+        ensureGamePads()
+    }
 
     fun resume() {
         mInputManager.registerInputDeviceListener(this, Handler(Looper.getMainLooper()))
         mInputManager.onResume()
-        updateGamePads()
+        ensureGamePads()
     }
 
     fun pause() {
@@ -38,10 +41,9 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     }
 
     fun handleEvent(event: InputEvent): Boolean {
-        Log.v(TAG, "handleEvent: $event ${GamePad.getSourcesDesc(event.source)}")
         mGamPadListeners.forEach { it.gamePadEvent(event) }
         if (event is MotionEvent) mInputManager.onGenericMotionEvent(event)
-        return (gamePads?.get(event.deviceId)?.let { it.handleEvent(event) } ?: false) && enableKeyEventIntercept
+        return (gamePads[event.deviceId]?.let { it.handleEvent(event) } ?: false) && enableKeyEventIntercept
     }
 
     fun addGamePadListener(gamePadListener: IGamePadListener) {
@@ -52,28 +54,51 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         mGamPadListeners.remove(gamePadListener)
     }
 
-    override fun onInputDeviceAdded(deviceId: Int) = updateGamePads()
-    override fun onInputDeviceChanged(deviceId: Int) = updateGamePads()
-    override fun onInputDeviceRemoved(deviceId: Int) = updateGamePads()
+    override fun onInputDeviceAdded(deviceId: Int) {
+        mInputManager.getInputDevice(deviceId)
+                ?.takeIf { isSource(it.sources, SOURCE_GAMEPAD) || isSource(it.sources, SOURCE_JOYSTICK) }
+                ?.let {
+                    val gamePad = GamePad(it, enableDpadTransform)
+                    gamePads[deviceId] = gamePad
+                    mGamPadListeners.forEach { it.gamePadAdded(gamePad) }
+                }
+    }
 
-    private fun updateGamePads() {
-        gamePads = mInputManager.inputDeviceIds
-                .map { mInputManager.getInputDevice(it) }
-                .filter { isSource(it.sources, SOURCE_GAMEPAD) || isSource(it.sources, SOURCE_JOYSTICK) }
-                .map { it.id to GamePad(it, enableDpadTransform) }
-                .toMap()
-                .toSortedMap()
-        mGamPadListeners.forEach { it.gamePadUpdate() }
+    override fun onInputDeviceChanged(deviceId: Int) {
+        gamePads[deviceId]?.let {
+            mGamPadListeners.forEach {
+                item -> item.gamePadChanged(it)
+            }
+        }
+    }
+
+    override fun onInputDeviceRemoved(deviceId: Int) {
+        gamePads[deviceId]?.let {
+            gamePads.remove(deviceId)
+            mGamPadListeners.forEach {
+                item -> item.gamePadRemoved(it)
+            }
+        }
+    }
+
+    private fun ensureGamePads() {
+        val inputDeviceIds = mInputManager.inputDeviceIds.toList()
+        gamePads.keys.minus(inputDeviceIds).forEach { onInputDeviceRemoved(it) }
+        inputDeviceIds.minus(gamePads.keys).forEach { onInputDeviceAdded(it) }
     }
 
     interface IGamePadListener {
         fun gamePadEvent(event: InputEvent)
-        fun gamePadUpdate()
+        fun gamePadAdded(gamePad: GamePad)
+        fun gamePadChanged(gamePad: GamePad)
+        fun gamePadRemoved(gamePad: GamePad)
     }
 
     class GamePadListener : IGamePadListener {
         override fun gamePadEvent(event: InputEvent) {}
-        override fun gamePadUpdate() {}
+        override fun gamePadAdded(gamePad: GamePad) {}
+        override fun gamePadChanged(gamePad: GamePad) {}
+        override fun gamePadRemoved(gamePad: GamePad) {}
     }
 
     companion object {
