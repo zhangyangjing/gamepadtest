@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateFormat
 import android.view.*
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
@@ -22,10 +21,13 @@ import com.zhangyangjing.gamepadtest.util.Settings.Companion.PREF_KEY_LOG_LAB_TI
 import kotlinx.android.synthetic.main.fragment_log_viewer.*
 import lt.neworld.spanner.Spanner
 import lt.neworld.spanner.Spans
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.max
 
 class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager.Listener(), GamePad.IListener by GamePad.Listener() {
 
+    private val formatter = SimpleDateFormat("hh:mm:ss.SSS")
     private var host: MainActivity? = null
     private lateinit var mPref: SharedPreferences
 
@@ -144,7 +146,7 @@ class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager
         else -> Spanner()
     }
 
-    private inline fun formatCurrentTime() = DateFormat.format("hh:mm:ss.SSS", System.currentTimeMillis()).toString()
+    private inline fun formatCurrentTime() = formatter.format(Date(System.currentTimeMillis()))
 
     private inline fun formatKeyEventKeyCode(key: Int) = KeyEvent.keyCodeToString(key).substring(8)
 
