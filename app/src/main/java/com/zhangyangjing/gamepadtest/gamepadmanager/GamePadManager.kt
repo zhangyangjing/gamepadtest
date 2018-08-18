@@ -6,6 +6,7 @@ import android.os.Looper
 import android.support.v4.view.InputDeviceCompat.SOURCE_GAMEPAD
 import android.support.v4.view.InputDeviceCompat.SOURCE_JOYSTICK
 import android.view.InputEvent
+import android.view.KeyEvent
 import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.inputmanagercompat.InputManagerCompat
 import java.util.*
@@ -41,9 +42,12 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     }
 
     fun handleEvent(event: InputEvent): Boolean {
-        mGamPadListeners.forEach { it.gamePadEvent(event) }
         if (event is MotionEvent) mInputManager.onGenericMotionEvent(event)
-        return (gamePads[event.deviceId]?.let { it.handleEvent(event) } ?: false) && enableKeyEventIntercept
+
+        return gamePads[event.deviceId]?.let {
+            mGamPadListeners.forEach { it.gamePadEvent(event) }
+            it.handleEvent(event) && enableKeyEventIntercept || (event is KeyEvent && event.keyCode in sTranslatedKeyCodes)
+        } ?: false
     }
 
     fun addGamePadListener(listener: IListener) {
@@ -105,5 +109,11 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
         private val TAG = GamePadManager::class.java.simpleName
 
         private inline fun isSource(sources: Int, source: Int) = source and sources == source
+
+        private val sTranslatedKeyCodes = listOf(
+                KeyEvent.KEYCODE_DPAD_CENTER,  // A
+                KeyEvent.KEYCODE_BACK,  // B
+                KeyEvent.KEYCODE_DEL,  // X
+                KeyEvent.KEYCODE_SPACE)  // Y
     }
 }
