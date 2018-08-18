@@ -113,7 +113,7 @@ class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager
                 host?.logAdapter?.clearMessage(); true
             }
             R.id.item_add_splitter -> {
-                host?.logAdapter?.addMessage("------------"); true
+                host?.logAdapter?.addSplitter(); true
             }
             else -> false
         }
