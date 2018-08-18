@@ -18,6 +18,7 @@ import com.zhangyangjing.gamepadtest.ui.fragment.SettingFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogAdapter
 import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogViewerFragment
+import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogWriter
 import com.zhangyangjing.gamepadtest.util.Settings
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navTo(R.id.nav_game_pad)
 
         gamePadManager = GamePadManager(this)
+        lifecycle.addObserver(LogWriter(this, gamePadManager, logAdapter))
 
         mPref = getSharedPreferences(Settings.PREF_NAME, Context.MODE_PRIVATE)
         updateGamePadManagerSettings()
