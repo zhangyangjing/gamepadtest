@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
-        navTo(R.id.nav_camera)
+        navTo(R.id.nav_game_pad)
 
         gamePadManager = GamePadManager(this)
 
@@ -95,9 +95,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setCheckedItem(navId)
         val fragment = when (navId) {
-            R.id.nav_camera -> GamePadViewerFragment()
-            R.id.nav_gallery -> LogViewerFragment()
-            R.id.nav_slideshow -> SettingFragment()
+            R.id.nav_game_pad -> GamePadViewerFragment()
+            R.id.nav_log -> LogViewerFragment()
+            R.id.nav_settings -> SettingFragment()
             else -> Fragment()
         }
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commitAllowingStateLoss()

@@ -6,14 +6,14 @@
     tools:showIn="navigation_view">
 
     <item
-        android:id="@+id/item_clear"
-        android:icon="@drawable/ic_menu_gallery"
-        android:title="清空"
+        android:id="@+id/item_add_splitter"
+        android:icon="@drawable/ic_label_outline_black_24dp"
+        android:title="标记"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/item_add_splitter"
-        android:icon="@drawable/ic_menu_send"
-        android:title="标记"
+        android:id="@+id/item_clear"
+        android:icon="@drawable/ic_clear_all_black_24dp"
+        android:title="清空"
         app:showAsAction="always"/>
 </menu>
