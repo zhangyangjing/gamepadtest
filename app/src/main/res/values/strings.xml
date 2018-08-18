@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">GamepadTest</string>
+    <string name="app_name">GamePadTest</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
 
     <string name="pref_key_intercept_key_event">intercept_key_event</string>
     <string name="pref_key_transform_stick">transform_stick</string>
