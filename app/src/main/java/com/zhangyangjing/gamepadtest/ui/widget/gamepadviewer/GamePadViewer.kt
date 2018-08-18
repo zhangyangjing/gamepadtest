@@ -3,10 +3,8 @@ package com.zhangyangjing.gamepadtest.ui.widget.gamepadviewer
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
-import android.graphics.Color
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePad.Companion.AXIS_BRAKE
@@ -88,7 +86,6 @@ class GamePadViewer : View, GamePad.IListener {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawColor(Color.BLUE)
         widgets.forEach {
             updateWidgetState(it, gamePad ?: return)
             canvas.save()
@@ -99,8 +96,6 @@ class GamePadViewer : View, GamePad.IListener {
     }
 
     private fun initWidgets() {
-        Log.v(TAG, "initWidgets")
-
         widgets.add(Button(context, WGT_BTN_A, 0.7f, 0.6f, 0.2f, 0.2f))
         widgets.add(Button(context, WGT_BTN_B, 0.85f, 0.5f, 0.2f, 0.2f))
         widgets.add(Button(context, WGT_BTN_X, 0.55f, 0.5f, 0.2f, 0.2f))

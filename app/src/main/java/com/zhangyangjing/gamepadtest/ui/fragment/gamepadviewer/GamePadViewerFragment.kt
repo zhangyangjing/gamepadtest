@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -25,8 +27,15 @@ class GamePadViewerFragment : Fragment(), GamePadManager.IListener by GamePadMan
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val orientation = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) VERTICAL else HORIZONTAL
         list.layoutManager = LinearLayoutManager(context, orientation, false)
+
+        val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        val drawable = ContextCompat.getDrawable(context!!, R.drawable.item_vertical_divider)!!
+        itemDecorator.setDrawable(drawable)
+        list.addItemDecoration(itemDecorator)
+
         list.adapter = GamePadAdapter(context!!)
     }
 

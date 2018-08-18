@@ -48,10 +48,10 @@ class GamePadAdapter(private val mCtx: Context) : RecyclerView.Adapter<RecyclerV
 
     private fun getPadLabel(device: InputDevice, label: String): SpannableStringBuilder {
         return when (label) {
-            PREF_KEY_PAD_LAB_ID -> Spanner().append("id:", Spans.bold()).append(device.id.toString())
-            PREF_KEY_PAD_LAB_NAME -> Spanner().append("name:", Spans.bold()).append(device.name)
-            PREF_KEY_PAD_LAB_SOURCE -> Spanner().append("source:", Spans.bold()).append(GamePad.getSourcesDesc(device.sources))
-            PREF_KEY_PAD_LAB_DESC -> Spanner().append("desc:", Spans.bold()).append(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) device.descriptor else "unknown")
+            PREF_KEY_PAD_LAB_ID -> Spanner().append("id: ", Spans.bold()).append(device.id.toString())
+            PREF_KEY_PAD_LAB_NAME -> Spanner().append("name: ", Spans.bold()).append(device.name)
+            PREF_KEY_PAD_LAB_SOURCE -> Spanner().append("source: ", Spans.bold()).append(GamePad.getSourcesDesc(device.sources))
+            PREF_KEY_PAD_LAB_DESC -> Spanner().append("desc: ", Spans.bold()).append(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) device.descriptor else "unknown")
             else -> Spanner("__unknown__")
         }
     }
