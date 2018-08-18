@@ -1,10 +1,12 @@
-package com.zhangyangjing.gamepadtest.ui.fragment
+package com.zhangyangjing.gamepadtest.ui.fragment.logviewer
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.*
 import com.zhangyangjing.gamepadtest.MainActivity
@@ -20,11 +22,19 @@ import com.zhangyangjing.gamepadtest.util.Settings.Companion.PREF_KEY_LOG_LAB_TI
 import kotlinx.android.synthetic.main.fragment_log_viewer.*
 import lt.neworld.spanner.Spanner
 import lt.neworld.spanner.Spans
+import kotlin.math.max
 
 class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager.Listener(), GamePad.IListener by GamePad.Listener() {
 
     private var host: MainActivity? = null
     private lateinit var mPref: SharedPreferences
+
+    private val mAdapterDataObserver = object : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            super.onChanged()
+            log_viewer.smoothScrollToPosition(max(log_viewer.adapter.itemCount - 1, 0))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +46,23 @@ class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager
         return inflater.inflate(R.layout.fragment_log_viewer, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        log_viewer.layoutManager = LinearLayoutManager(context)
+        log_viewer.adapter = host?.logAdapter
+    }
+
     override fun onStart() {
         super.onStart()
         host?.gamePadManager?.addGamePadListener(this)
+        host?.logAdapter?.registerAdapterDataObserver(mAdapterDataObserver)
         registerGamePad()
     }
 
     override fun onStop() {
         super.onStop()
         host?.gamePadManager?.removeGamePadListener(this)
+        host?.logAdapter?.unregisterAdapterDataObserver(mAdapterDataObserver)
         unregisterGamePad()
     }
 
@@ -69,7 +87,7 @@ class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager
             return
 
         val message = formatKeyEvent(event as KeyEvent)
-        log_viewer.addMessage(message)
+        host?.logAdapter?.addMessage(message)
     }
 
     override fun onGamePadStateUpdate(gamePad: GamePad, type: Int, code: Int) {
@@ -82,7 +100,7 @@ class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager
 
         val value = gamePad.axisStates[code]
         val message = formatMotionEvent(gamePad.device, gamePad.device.sources, code, value)
-        log_viewer.addMessage(message)
+        host?.logAdapter?.addMessage(message)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -92,10 +110,10 @@ class LogViewerFragment : Fragment(), GamePadManager.IListener by GamePadManager
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item_clear -> {
-                log_viewer.clearMessage(); true
+                host?.logAdapter?.clearMessage(); true
             }
             R.id.item_add_splitter -> {
-                log_viewer.addMessage("-------------------"); true
+                host?.logAdapter?.addMessage("------------"); true
             }
             else -> false
         }

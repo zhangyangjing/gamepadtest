@@ -1,4 +1,4 @@
-package com.zhangyangjing.gamepadtest.ui.widget.logviewer
+package com.zhangyangjing.gamepadtest.ui.fragment.logviewer
 
 import android.support.v4.util.CircularArray
 import android.support.v7.widget.RecyclerView
@@ -10,15 +10,15 @@ import kotlinx.android.synthetic.main.item_log.view.*
 /**
  * Created by zhangyangjing on 2018/8/13.
  */
-class LogAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ILog {
+class LogAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val mMessages = CircularArray<CharSequence>(MAX_MESSAGES)
 
-    override fun clearMessage() {
+    fun clearMessage() {
         mMessages.clear()
         notifyDataSetChanged()
     }
 
-    override fun addMessage(msg: CharSequence) {
+    fun addMessage(msg: CharSequence) {
         mMessages.addLast(msg)
         if (mMessages.size() > MAX_MESSAGES)
             mMessages.popFirst()
@@ -35,7 +35,7 @@ class LogAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ILog {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = View.inflate(parent.context, R.layout.item_log, null)
-        return object :RecyclerView.ViewHolder(view) {}
+        return object : RecyclerView.ViewHolder(view) {}
     }
 
     companion object {

@@ -13,9 +13,10 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
-import com.zhangyangjing.gamepadtest.ui.fragment.LogViewerFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.SettingFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerFragment
+import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogAdapter
+import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogViewerFragment
 import com.zhangyangjing.gamepadtest.util.Settings
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var mNavNow: Int = INVALIDATE_ID
     private lateinit var mPref: SharedPreferences
 
+    val logAdapter: LogAdapter = LogAdapter()
     lateinit var gamePadManager: GamePadManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
