@@ -1,8 +1,10 @@
 package com.zhangyangjing.gamepadtest.ui.fragment.logviewer
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
@@ -10,6 +12,8 @@ import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
 import kotlinx.android.synthetic.main.fragment_log_viewer.*
 import kotlin.math.max
+
+
 
 class LogViewerFragment : Fragment() {
 
@@ -39,6 +43,15 @@ class LogViewerFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.log_ops, menu)
+
+        for (i in 0 until menu.size()) {
+            val item = menu.getItem(i)
+
+            var drawable = item.icon
+            drawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(drawable, Color.WHITE)
+            item.icon = drawable
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
