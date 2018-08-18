@@ -8,10 +8,11 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.zhangyangjing.gamepadtest"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,6 +30,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'lt.neworld:spanner:0.5.0'
     testImplementation 'junit:junit:4.12'

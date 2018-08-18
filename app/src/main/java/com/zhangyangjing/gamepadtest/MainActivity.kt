@@ -13,6 +13,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
+import com.zhangyangjing.gamepadtest.ui.fragment.AboutFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.SettingFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogAdapter
@@ -98,6 +99,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_game_pad -> GamePadViewerFragment()
             R.id.nav_log -> LogViewerFragment()
             R.id.nav_settings -> SettingFragment()
+            R.id.nav_about -> AboutFragment()
             else -> Fragment()
         }
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commitAllowingStateLoss()
