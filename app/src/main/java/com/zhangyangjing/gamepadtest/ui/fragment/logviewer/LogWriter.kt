@@ -113,9 +113,9 @@ class LogWriter(context: Context, private val gamePadManager: GamePadManager, pr
 
     companion object {
         private val LOG_LABS = listOf(
-                PREF_KEY_LOG_LAB_TIME to false,
-                PREF_KEY_LOG_LAB_ID to false,
-                PREF_KEY_LOG_LAB_NAME to false,
-                PREF_KEY_LOG_LAB_SOURCE to false)
+                PREF_KEY_LOG_LAB_TIME to true,
+                PREF_KEY_LOG_LAB_ID to true,
+                PREF_KEY_LOG_LAB_NAME to true,
+                PREF_KEY_LOG_LAB_SOURCE to true)
     }
 }

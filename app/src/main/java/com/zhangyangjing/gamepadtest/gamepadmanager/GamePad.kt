@@ -28,7 +28,6 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
     }
 
     fun handleEvent(event: InputEvent): Boolean {
-        dump()
         return when (event) {
             is KeyEvent -> handleKeyEvent(event)
             is MotionEvent -> handleMotionEvent(event)

@@ -34,7 +34,10 @@ class LogViewerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        log_viewer.layoutManager = LinearLayoutManager(context)
+
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.stackFromEnd = true
+        log_viewer.layoutManager = layoutManager
         log_viewer.adapter = host?.logAdapter
     }
 
