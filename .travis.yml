@@ -1,33 +1,33 @@
 language: android
-
 android:
   components:
-    - tools
-    - platform-tools
-    - tools
-
-    # The BuildTools version used by your project
-    - build-tools-27.0.3
-
-    # The SDK version used to compile your project
-    - android-27
-
-    - sys-img-armeabi-v7a-android-27
-
-   #licenses:
-    #- 'android-sdk-preview-license-.+'
-    #- 'android-sdk-license-.+'
-    #- 'google-gdk-license-.+'
-    #
-    #
-
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-27.0.3
+  - android-27
+  - sys-img-armeabi-v7a-android-27
 before_install:
-   - yes | sdkmanager "platforms;android-27"
-   - yes | sdkmanager "build-tools;27.0.3"
-
-# Emulator Management: Create, Start and Wait
-#before_script:
-   #- chmod +x gradlew
-
+- openssl aes-256-cbc -K $encrypted_c6c7bb143d52_key -iv $encrypted_c6c7bb143d52_iv
+  -in misc/release.keystore.enc -out misc/release.keystore -d
+- echo "RELEASE_STORE_FILE=$TRAVIS_BUILD_DIR/misc/release.keystore" >> $TRAVIS_BUILD_DIR/gradle.properties
+- echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> $TRAVIS_BUILD_DIR/gradle.properties
+- echo "RELEASE_KEY_PASSWORD=$RELEASE_STORE_PASSWORD" >> $TRAVIS_BUILD_DIR/gradle.properties
+- echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> $TRAVIS_BUILD_DIR/gradle.properties
+- yes | sdkmanager "platforms;android-27"
+- yes | sdkmanager "build-tools;27.0.3"
 script:
-  - "./gradlew assembleRelease"
+- "./gradlew assembleRelease"
+env:
+  global:
+  - secure: SK70lGg0fJETNCQsz2uW8oDdjkHcQbBYo7NHO71cX1Zxsc6yMFtQ5FOLeVZNJqgfrppG30vXbm+STTOuxx1ZrTPdvnY1SCiGScm8Wh541p+8ln9ugJjgTawX4Y1ZCYUWjjZVgVQu+QSiFtbSuqez2yBpFRbjM/c1Sbmwux6PJT0z2MT9lps5AuBAng1NGXDvnHVC4x/vgxuKmtrnoN2B14jUtlmNjWnCmzp+0nnUwAMykU13X4E5uynNvkxq+SqsWNU5tz6cJfw8AfzpaDyTySglTAhkSLiLWygh90VQk9BenmGjE1Jvqjp593n23RlvMRgWrZwM3lk2lS6G33gBGXTNE4cpdDd90lkmi+iGsByzWOxSyFsdeK89/wQPA0fXRifnszi9Q3Q05eDxEyq+sslA9dN4ytGyXLKIQScfI+MyenKeM+R8q7ZgrhUoTb1GplpFajXHDmzwI5ccdEpoesKNa/+E1enBGUsOLP234j4lZZATJfJ1e/W17niz8BB4sXtX2tDEyBlGj5pIDMV9EG5BqjyFLrItUtT7qYqY0eZg/iAwAIFN7psGyn8I0yC7zWT3HDqSihdGSvz0ubU8Bpt3pEj19QChfxfZuPuFN9bbNjr/XE0BjxzgHJwlb5wKmO5boDlyBxzv+Nx+w1r94+DVrVTFbaBeNMQOuL7jIyo=
+  - secure: p2EhVAp5gcx6wLH93V32g5jliUExPSVkqtAJOqRXNM96sAPrTQIyPaxNU1n7KcF5IlHADNj2/aOLgYusCgSY6RWYeEMZsNxeG1Ono0iA10tPegP7oDNIzcR4CtWstglkVD0COXMnNsl+0DJKpej5B9zBIu2eS8m+V4ARKfHHnvzxBeUu5h62BnI+wn6DyhAQd0zZU1hTr+INd9eESE7/u7TJQA7iRuP0KSvUArWlI/YBwUjL2TjYkptqBYoYPT0TRhIPZ7JvNAW/JxeHNFxApLRyknpER3UZIWgND6hHr24vfV1xT2nGZOrA4kwZ/d+3oJKSFexE6Utb71KZlh5DAPATn5+QFQf3oPElYzCzK8uWfC/HPYoghYe6ioD6SdGEhDNJjwLroOhRDM9rsnsUaGQ+XMxSQqo8jnt3I/s/LIQGRitWoa1TihLRSbJh+oT3pDow3MU8EUXgFH3S5/coIUVnGYkw7BeiBnKlxlb9XsyouuQuPMoLiQSw39tGUWxdm9kR/lETsXLOfREX61J9GavVYKg7dwayWqvYXDH+tzOUGOmRvwrJtFg2OIG6FsA4i7ahzDhgeBahGxkGVV3Hec4MUky1Lkf9V3c5ooLlsjhALga+AXG41hGE8GeKHvIt8fD28G+G+WgPOvMuOEGQ7hQS6ZTY+U2G3rQ8PdQS/iQ=
+  - secure: PCYIlKi/l6W50Ap4MrDtlD77MRIg2zS4u5wlsrFz6eqt10L6ELIWlv6qchtYfrfUgKmWst1gwI4he12qcp0SRRaO+dUfQZsumYFHITiyMJsU9UCXpGYuSGjZC+9N5KI2kmn7m+u+/rzdEIeNzgkMT1fTKKNEzqlgAtJi5ae3I4msdzeazO/RCLdZ1plBQqmOnHRGw1FIh3D+B+NpAB6xkQPGIQ7TLRC9gMIsrmmpAUeucrXm4e/qSbwhPiCNpy26CgJYwlK6aP0Klq1SMY66BEoiuwsEa4/vBuuicJOGPYre8lUAribD6cIum6roRduhxVn7wwmwpspL811QwLba9//dMxNfmar7RQ5yLMgDLBJ1IJl4n7nQEXexMsX1DauAR7MRN4oSD0Dw7+TBNUDxgtSb890e20imqfxkZboKWxbsfCs3gbkAhHjnE6087yYDAK+KGD1fUVcpJzQai2koVVCLz4OSP12D/OKmfJbzAS3OYcdKC1xEBOZCuwiRKH+Zywv9h+BrWoqfhnLrOeR2kY06Wsy9Q6NoaU67Yc3i8UHFQtloOXxgbodhdoI3cyb10PdMl7xzThH1N8qO31Ghz7K0a1kSgAvlfZWI8qcKMdd5oFKR3r1JKZfoCnwF2TVfvJya3B5a75juDAVPpsqzqmjJkbRwNig6g/nxMKH7x3M=
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
