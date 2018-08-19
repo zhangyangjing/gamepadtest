@@ -11,18 +11,15 @@ import android.view.*
 import com.zhangyangjing.gamepadtest.MainActivity
 import com.zhangyangjing.gamepadtest.R
 import kotlinx.android.synthetic.main.fragment_log_viewer.*
-import kotlin.math.max
-
 
 
 class LogViewerFragment : Fragment() {
-
     private var host: MainActivity? = null
 
     private val mAdapterDataObserver = object : RecyclerView.AdapterDataObserver() {
         override fun onChanged() {
             super.onChanged()
-            log_viewer.smoothScrollToPosition(max(log_viewer.adapter.itemCount - 1, 0))
+            log_viewer.layoutManager.scrollToPosition(log_viewer.adapter.itemCount - 1)
         }
     }
 
