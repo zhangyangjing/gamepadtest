@@ -24,10 +24,20 @@ env:
   - secure: p2EhVAp5gcx6wLH93V32g5jliUExPSVkqtAJOqRXNM96sAPrTQIyPaxNU1n7KcF5IlHADNj2/aOLgYusCgSY6RWYeEMZsNxeG1Ono0iA10tPegP7oDNIzcR4CtWstglkVD0COXMnNsl+0DJKpej5B9zBIu2eS8m+V4ARKfHHnvzxBeUu5h62BnI+wn6DyhAQd0zZU1hTr+INd9eESE7/u7TJQA7iRuP0KSvUArWlI/YBwUjL2TjYkptqBYoYPT0TRhIPZ7JvNAW/JxeHNFxApLRyknpER3UZIWgND6hHr24vfV1xT2nGZOrA4kwZ/d+3oJKSFexE6Utb71KZlh5DAPATn5+QFQf3oPElYzCzK8uWfC/HPYoghYe6ioD6SdGEhDNJjwLroOhRDM9rsnsUaGQ+XMxSQqo8jnt3I/s/LIQGRitWoa1TihLRSbJh+oT3pDow3MU8EUXgFH3S5/coIUVnGYkw7BeiBnKlxlb9XsyouuQuPMoLiQSw39tGUWxdm9kR/lETsXLOfREX61J9GavVYKg7dwayWqvYXDH+tzOUGOmRvwrJtFg2OIG6FsA4i7ahzDhgeBahGxkGVV3Hec4MUky1Lkf9V3c5ooLlsjhALga+AXG41hGE8GeKHvIt8fD28G+G+WgPOvMuOEGQ7hQS6ZTY+U2G3rQ8PdQS/iQ=
   - secure: PCYIlKi/l6W50Ap4MrDtlD77MRIg2zS4u5wlsrFz6eqt10L6ELIWlv6qchtYfrfUgKmWst1gwI4he12qcp0SRRaO+dUfQZsumYFHITiyMJsU9UCXpGYuSGjZC+9N5KI2kmn7m+u+/rzdEIeNzgkMT1fTKKNEzqlgAtJi5ae3I4msdzeazO/RCLdZ1plBQqmOnHRGw1FIh3D+B+NpAB6xkQPGIQ7TLRC9gMIsrmmpAUeucrXm4e/qSbwhPiCNpy26CgJYwlK6aP0Klq1SMY66BEoiuwsEa4/vBuuicJOGPYre8lUAribD6cIum6roRduhxVn7wwmwpspL811QwLba9//dMxNfmar7RQ5yLMgDLBJ1IJl4n7nQEXexMsX1DauAR7MRN4oSD0Dw7+TBNUDxgtSb890e20imqfxkZboKWxbsfCs3gbkAhHjnE6087yYDAK+KGD1fUVcpJzQai2koVVCLz4OSP12D/OKmfJbzAS3OYcdKC1xEBOZCuwiRKH+Zywv9h+BrWoqfhnLrOeR2kY06Wsy9Q6NoaU67Yc3i8UHFQtloOXxgbodhdoI3cyb10PdMl7xzThH1N8qO31Ghz7K0a1kSgAvlfZWI8qcKMdd5oFKR3r1JKZfoCnwF2TVfvJya3B5a75juDAVPpsqzqmjJkbRwNig6g/nxMKH7x3M=
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.android/build-cache
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
+before_deploy:
+deploy:
+  provider: releases
+  api_key:
+    secure: iJIHfRyv8+c+KOOC6qJ290cp6y1ELE/NT/P6Nfj2IcJmYrxPu2Kf3+J8xkKecSyRc/bSM3QJ65iSvO6sRVYXSzxsrWLE9fClK9qjZd5bGp4Tv768Tq+cpC4WqjqusAvmNrpZyzmWd7MNOi/2d8kHAIN5c/fAb/Eli86+GVyWo2fCUc1Jf3ePbWQT/qZanoQGOcj0LMpHKXsQb/lSY6pfG3IBtC9xpAWGZlXSCRcVXmTAnHMdDyDobgjzsW9hEySGrMEkkmN8GLPazqfpncTZ3UU+fHDkdzFXeshC0653ADrcKYhMCyLGNRV5+8aotmc8fWEpR7jfdqBYmXxNRziZLOasO20Ys2iVrJWO89tOm51qongZKnO+TC14RWoN2uExX0Id3ubZk8dB9TNZB2uCjKOIKGkXqui6kc7t3GB+m38vgNRJxwgoTcsHI1SImn98to2lae4+30Oa+BDG51GsQW56MD36IxmitkdOVUQyytDdPCsiBX9G6q89QBEPBvT38F9WMgSdaaOw0ZyNCMVy3wQ1lVAODnoRperYk7KfgtHniE3P0Vx0isrkOOPok95DBs3LXsTok0aAyG6IoaPcUa/rf02d6FRUukOTPvS6AVlTgODNR+C3oBNp/d00w8iMd72ooyyBs0BE3N4m1vv9wpVQxhCPhKMAFvwTgHESxHw=
+  skip_cleanup: true
+  file: app/build/outputs/apk/release/app-release.apk
+  on:
+    tags: true
+    repo: zhangyangjing/gamepadtest
