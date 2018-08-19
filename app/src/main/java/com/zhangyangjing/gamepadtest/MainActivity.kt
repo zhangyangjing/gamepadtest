@@ -15,9 +15,9 @@ import android.view.MotionEvent
 import com.zhangyangjing.gamepadtest.gamepadmanager.GamePadManager
 import com.zhangyangjing.gamepadtest.ui.fragment.AboutFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.SettingFragment
-import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerFragment
+import com.zhangyangjing.gamepadtest.ui.fragment.gamepadviewer.GamePadViewerWrapperFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogAdapter
-import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogViewerFragment
+import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogViewerWrapperFragment
 import com.zhangyangjing.gamepadtest.ui.fragment.logviewer.LogWriter
 import com.zhangyangjing.gamepadtest.util.Settings
 import kotlinx.android.synthetic.main.activity_main.*
@@ -98,8 +98,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setCheckedItem(navId)
         val fragment = when (navId) {
-            R.id.nav_game_pad -> GamePadViewerFragment()
-            R.id.nav_log -> LogViewerFragment()
+            R.id.nav_game_pad -> GamePadViewerWrapperFragment()
+            R.id.nav_log -> LogViewerWrapperFragment()
             R.id.nav_settings -> SettingFragment()
             R.id.nav_about -> AboutFragment()
             else -> Fragment()
