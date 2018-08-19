@@ -82,7 +82,7 @@ class LogWriter(context: Context, private val gamePadManager: GamePadManager, pr
     private fun geEventDesc(device: InputDevice, source: Int) = LOG_LABS
             .filter { mPref.getBoolean(it.first, it.second) }
             .map { getLabelDesc(device, source, it.first) }
-            .reduce { sum, ele -> sum.append(" ").append(ele) }
+            .fold(Spanner()) { sum, ele -> sum.append(" ").append(ele) }
 
     private fun getLabelDesc(device: InputDevice, source: Int, lab: String) = when (lab) {
         PREF_KEY_LOG_LAB_TIME -> Spanner().append(formatCurrentTime(), Spans.foreground(Color.BLUE))
