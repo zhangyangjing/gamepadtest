@@ -67,24 +67,24 @@ class LogWriter(context: Context, private val gamePadManager: GamePadManager, pr
         logAdapter.addMessage(message)
     }
 
-    private inline fun formatKeyEvent(event: KeyEvent) = geEventDesc(event.device, event.source)
+    private fun formatKeyEvent(event: KeyEvent) = geEventDesc(event.device, event.source)
             .append(" ")
             .append(formatKeyEventKeyCode(event.keyCode), Spans.foreground(Color.RED))
             .append(" ")
             .append(formatKeyEventAction(event.action), Spans.foreground(Color.GREEN))
 
-    private inline fun formatMotionEvent(device: InputDevice, source: Int, code: Int, value: Float) = geEventDesc(device, source)
+    private fun formatMotionEvent(device: InputDevice, source: Int, code: Int, value: Float) = geEventDesc(device, source)
             .append(" ")
             .append(GamePad.sAxisNameMap[code], Spans.foreground(Color.RED))
             .append(" ")
             .append(value.toString(), Spans.foreground(Color.GREEN))
 
-    private inline fun geEventDesc(device: InputDevice, source: Int) = LOG_LABS
+    private fun geEventDesc(device: InputDevice, source: Int) = LOG_LABS
             .filter { mPref.getBoolean(it.first, it.second) }
             .map { getLabelDesc(device, source, it.first) }
             .reduce { sum, ele -> sum.append(" ").append(ele) }
 
-    private inline fun getLabelDesc(device: InputDevice, source: Int, lab: String) = when (lab) {
+    private fun getLabelDesc(device: InputDevice, source: Int, lab: String) = when (lab) {
         PREF_KEY_LOG_LAB_TIME -> Spanner().append(formatCurrentTime(), Spans.foreground(Color.BLUE))
         PREF_KEY_LOG_LAB_ID -> Spanner().append(device.id.toString(), Spans.foreground(Color.MAGENTA))
         PREF_KEY_LOG_LAB_NAME -> Spanner().append(device.name, Spans.foreground(Color.CYAN))
@@ -92,11 +92,11 @@ class LogWriter(context: Context, private val gamePadManager: GamePadManager, pr
         else -> Spanner()
     }
 
-    private inline fun formatCurrentTime() = formatter.format(Date(System.currentTimeMillis()))
+    private fun formatCurrentTime() =  formatter.format(Date(System.currentTimeMillis()))
 
-    private inline fun formatKeyEventKeyCode(key: Int) = KeyEvent.keyCodeToString(key).substring(8)
+    private fun formatKeyEventKeyCode(key: Int) = KeyEvent.keyCodeToString(key).substring(8)
 
-    private inline fun formatKeyEventAction(action: Int) = when (action) {
+    private fun formatKeyEventAction(action: Int) = when (action) {
         KeyEvent.ACTION_UP -> "UP"
         KeyEvent.ACTION_DOWN -> "DOWN"
         KeyEvent.ACTION_MULTIPLE -> "MULTIPLE"
@@ -104,11 +104,11 @@ class LogWriter(context: Context, private val gamePadManager: GamePadManager, pr
     }
 
     private fun registerGamePad() {
-        gamePadManager.gamePads?.forEach { it.value.addListener(this) }
+        gamePadManager.gamePads.forEach { it.value.addListener(this) }
     }
 
     private fun unregisterGamePad() {
-        gamePadManager.gamePads?.forEach { it.value.removeListener(this) }
+        gamePadManager.gamePads.forEach { it.value.removeListener(this) }
     }
 
     companion object {
