@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun navTo(navId: Int, forceReload: Boolean = false) {
         takeIf { forceReload || navId != mNavNow }?.let { mNavNow = navId } ?: return
 
+        toolbar.menu.clear()
         nav_view.setCheckedItem(navId)
         val fragment = when (navId) {
             R.id.nav_game_pad -> GamePadViewerWrapperFragment()
