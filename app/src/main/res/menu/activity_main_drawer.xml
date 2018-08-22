@@ -9,11 +9,11 @@
         <item
             android:id="@+id/nav_game_pad"
             android:icon="@drawable/ic_gamepad_black_24dp"
-            android:title="手柄测试"/>
+            android:title="@string/nav_gamepad_test"/>
         <item
             android:id="@+id/nav_log"
             android:icon="@drawable/ic_note_black_24dp"
-            android:title="事件日志"/>
+            android:title="@string/nav_device_log"/>
     </group>
 
     <group
@@ -22,10 +22,10 @@
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="设置"/>
+            android:title="@string/nav_settings"/>
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info_black_24dp"
-            android:title="关于"/>
+            android:title="@string/nav_about"/>
     </group>
 </menu>

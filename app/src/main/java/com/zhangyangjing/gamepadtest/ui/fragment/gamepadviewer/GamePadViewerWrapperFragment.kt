@@ -52,7 +52,8 @@ class GamePadViewerWrapperFragment : Fragment(), GamePadManager.IListener by Gam
 
     private fun updateContent() {
         val cnt = host?.gamePadManager?.gamePads?.size ?: 0
-        val fragment = if (cnt > 0) GamePadViewerFragment() else EmptyFragment.ins("没有检测到手柄设备")
+        val message = getString(R.string.no_gamepad_found)
+        val fragment = if (cnt > 0) GamePadViewerFragment() else EmptyFragment.ins(message)
         childFragmentManager.beginTransaction().replace(R.id.wrapper, fragment).commitAllowingStateLoss()
     }
 }

@@ -50,7 +50,8 @@ class LogViewerWrapperFragment : Fragment() {
 
     private fun updateContent() {
         val cnt = host?.logAdapter?.itemCount ?: 0
-        val fragment = if (cnt > 0) LogViewerFragment() else EmptyFragment.ins("暂无手柄事件发生")
+        val message = getString(R.string.no_gamepad_event_occur)
+        val fragment = if (cnt > 0) LogViewerFragment() else EmptyFragment.ins(message)
         childFragmentManager.beginTransaction().replace(R.id.wrapper, fragment).commitAllowingStateLoss()
     }
 }

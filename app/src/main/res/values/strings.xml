@@ -1,20 +1,33 @@
-<resources>
-    <string name="app_name">GamePadTest</string>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:locale="languageCode">
+
+    <string name="app_name">GamePad Test</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="pref_key_intercept_key_event">intercept_key_event</string>
-    <string name="pref_key_transform_stick">transform_stick</string>
-    <string name="pref_key_log_enable_key_event">log_enable_key_event</string>
-    <string name="pref_key_log_enable_motion_event">log_enable_motion_event</string>
-
-    <string name="pref_key_log_lab_time">log_lab_time</string>
-    <string name="pref_key_log_lab_id">log_lab_id</string>
-    <string name="pref_key_log_lab_name">log_lab_name</string>
-    <string name="pref_key_log_lab_source">log_lab_source</string>
-
-    <string name="pref_key_pad_lab_id">pad_lab_id</string>
-    <string name="pref_key_pad_lab_name">pad_lab_name</string>
-    <string name="pref_key_pad_lab_source">pad_lab_source</string>
-    <string name="pref_key_pad_lab_desc">pad_lab_desc</string>
+    <string name="no_gamepad_found">No Gamepad Found</string>
+    <string name="no_gamepad_event_occur">No Gamepad Event Occur</string>
+    <string name="nav_header_title">GamePad Test</string>
+    <string name="menu_item_add_tag">Tag</string>
+    <string name="menu_item_clear_log">Clear</string>
+    <string name="nav_gamepad_test">Test</string>
+    <string name="nav_device_log">Log</string>
+    <string name="nav_settings">Setting</string>
+    <string name="nav_about">About</string>
+    <string name="pref_disable_system_handler">disable system handler</string>
+    <string name="pref_title_translate_axis_to_direction">translate axis to direction</string>
+    <string name="pref_title_key_event">Button</string>
+    <string name="pref_title_motion_event">Joystick</string>
+    <string name="pref_group_title_gamepad_setting">GamePad Setting</string>
+    <string name="pref_group_title_log_source">Log Source</string>
+    <string name="pref_group_title_log_display">Log Display</string>
+    <string name="pref_title_event_time">Time</string>
+    <string name="pref_title_devide_id">Device Id</string>
+    <string name="pref_title_device_name">Device Name</string>
+    <string name="pref_title_device_source">Device Source</string>
+    <string name="pref_group_title_gamepad_display">Gamepad Display</string>
+    <string name="pref_title_gamepad_id">Device Id</string>
+    <string name="pref_title_gamepad_name">Device Name</string>
+    <string name="pref_title_gamepad_source">Device Source</string>
+    <string name="pref_title_gamepad_desc">Device Desc Code</string>
 </resources>

@@ -1,0 +1,16 @@
+<resources>
+    <string name="pref_key_intercept_key_event">intercept_key_event</string>
+    <string name="pref_key_transform_stick">transform_stick</string>
+    <string name="pref_key_log_enable_key_event">log_enable_key_event</string>
+    <string name="pref_key_log_enable_motion_event">log_enable_motion_event</string>
+
+    <string name="pref_key_log_lab_time">log_lab_time</string>
+    <string name="pref_key_log_lab_id">log_lab_id</string>
+    <string name="pref_key_log_lab_name">log_lab_name</string>
+    <string name="pref_key_log_lab_source">log_lab_source</string>
+
+    <string name="pref_key_pad_lab_id">pad_lab_id</string>
+    <string name="pref_key_pad_lab_name">pad_lab_name</string>
+    <string name="pref_key_pad_lab_source">pad_lab_source</string>
+    <string name="pref_key_pad_lab_desc">pad_lab_desc</string>
+</resources>

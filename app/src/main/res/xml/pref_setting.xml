@@ -1,70 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="手柄设置">
+
+    <PreferenceCategory android:title="@string/pref_group_title_gamepad_setting">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_intercept_key_event"
-            android:title="禁用系统后续处理"/>
+            android:title="@string/pref_disable_system_handler"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_transform_stick"
-            android:title="转换摇杆数据到方向键"/>
+            android:title="@string/pref_title_translate_axis_to_direction"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="日志来源">
+
+    <PreferenceCategory android:title="@string/pref_group_title_log_source">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_log_enable_key_event"
-            android:title="按键"/>
+            android:title="@string/pref_title_key_event"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_log_enable_motion_event"
-            android:title="摇杆"/>
+            android:title="@string/pref_title_motion_event"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="日志显示">
+    <PreferenceCategory android:title="@string/pref_group_title_log_display">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_log_lab_time"
-            android:title="事件时间"/>
+            android:title="@string/pref_title_event_time"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_log_lab_id"
-            android:title="手柄 ID"/>
+            android:title="@string/pref_title_devide_id"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_log_lab_name"
-            android:title="手柄 Name"/>
+            android:title="@string/pref_title_device_name"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_log_lab_source"
-            android:title="手柄 Source"/>
+            android:title="@string/pref_title_device_source"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="手柄显示">
+    <PreferenceCategory android:title="@string/pref_group_title_gamepad_display">
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_key_pad_lab_id"
-            android:title="手柄 ID"/>
+            android:title="@string/pref_title_gamepad_id"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_pad_lab_name"
-            android:title="手柄 Name"/>
+            android:title="@string/pref_title_gamepad_name"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_key_pad_lab_source"
-            android:title="手柄 Source"/>
+            android:title="@string/pref_title_gamepad_source"/>
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_key_pad_lab_desc"
-            android:title="手柄 Desc"/>
+            android:title="@string/pref_title_gamepad_desc"/>
     </PreferenceCategory>
 </PreferenceScreen>

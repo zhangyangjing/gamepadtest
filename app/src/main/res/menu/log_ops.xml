@@ -8,12 +8,12 @@
     <item
         android:id="@+id/item_add_splitter"
         android:icon="@drawable/ic_label_outline_black_24dp"
-        android:title="标记"
+        android:title="@string/menu_item_add_tag"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/item_clear"
         android:icon="@drawable/ic_clear_all_black_24dp"
-        android:title="清空"
+        android:title="@string/menu_item_clear_log"
         app:showAsAction="always"/>
 </menu>

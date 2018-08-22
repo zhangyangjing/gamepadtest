@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">手柄测试</string>
+    <string name="navigation_drawer_open">打开侧边栏</string>
+    <string name="navigation_drawer_close">关闭侧边栏</string>
+    <string name="no_gamepad_found">没有检测到手柄设备</string>
+    <string name="no_gamepad_event_occur">暂无手柄事件发生</string>
+    <string name="nav_header_title">游戏手柄测试</string>
+    <string name="menu_item_add_tag">标记</string>
+    <string name="menu_item_clear_log">清空</string>
+    <string name="nav_gamepad_test">手柄测试</string>
+    <string name="nav_device_log">事件日志</string>
+    <string name="nav_settings">设置</string>
+    <string name="nav_about">关于</string>
+    <string name="pref_disable_system_handler">禁用系统后续处理</string>
+    <string name="pref_title_translate_axis_to_direction">转换摇杆数据到方向键</string>
+    <string name="pref_title_key_event">按键</string>
+    <string name="pref_title_motion_event">摇杆</string>
+    <string name="pref_group_title_gamepad_setting">手柄设置</string>
+    <string name="pref_group_title_log_source">日志来源</string>
+    <string name="pref_group_title_log_display">日志显示</string>
+    <string name="pref_title_event_time">事件时间</string>
+    <string name="pref_title_devide_id">手柄 ID</string>
+    <string name="pref_title_device_name">手柄 Name</string>
+    <string name="pref_title_device_source">手柄 Source</string>
+    <string name="pref_group_title_gamepad_display">手柄显示</string>
+    <string name="pref_title_gamepad_id">手柄 ID</string>
+    <string name="pref_title_gamepad_name">手柄 Name</string>
+    <string name="pref_title_gamepad_source">手柄 Source</string>
+    <string name="pref_title_gamepad_desc">手柄 Desc</string>
+</resources>
