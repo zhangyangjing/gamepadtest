@@ -58,7 +58,7 @@ class LogWriter(context: Context, private val gamePadManager: GamePadManager, pr
         if (TYPE_AXIS != type)
             return
 
-        val enableMotionEvent = mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_KEY_EVENT, true)
+        val enableMotionEvent = mPref.getBoolean(Settings.PREF_KEY_LOG_ENABLE_MOTION_EVENT, true)
         if (!enableMotionEvent)
             return
 
