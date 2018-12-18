@@ -55,7 +55,7 @@ class GamePad(val device: InputDevice, var enableDpadTransform: Boolean) {
     }
 
     private fun handleMotionEvent(event: MotionEvent): Boolean {
-        sAxisCodeMap.forEach { k, v -> updateAxisState(v, getCenteredAxis(event, k)) }
+        sAxisCodeMap.forEach { (k, v) -> updateAxisState(v, getCenteredAxis(event, k)) }
 
         if (enableDpadTransform) {
             updateBtnState(BTN_UP, axisStates[AXIS_HAT_Y] < -0.6)

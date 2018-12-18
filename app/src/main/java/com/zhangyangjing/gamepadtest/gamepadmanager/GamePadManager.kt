@@ -19,7 +19,7 @@ class GamePadManager(mCtx: Context) : InputManagerCompat.InputDeviceListener {
     var enableDpadTransform = true
         set(value) {
             field = value
-            gamePads.forEach { _, gamePad ->  gamePad.enableDpadTransform = value}
+            gamePads.forEach { (_, gamePad) -> gamePad.enableDpadTransform = value}
         }
 
     var gamePads: SortedMap<Int, GamePad> = sortedMapOf()
