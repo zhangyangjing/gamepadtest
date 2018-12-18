@@ -1,12 +1,10 @@
 language: android
 android:
   components:
-  - tools
-  - platform-tools
-  - tools
-  - build-tools-27.0.3
-  - android-27
-  - sys-img-armeabi-v7a-android-27
+  - build-tools-28.0.3
+  - android-28
+  licenses:
+  - 'android-sdk-license-.+'
 before_install:
 - openssl aes-256-cbc -K $encrypted_c6c7bb143d52_key -iv $encrypted_c6c7bb143d52_iv
   -in misc/release.keystore.enc -out misc/release.keystore -d
@@ -14,8 +12,6 @@ before_install:
 - echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> $TRAVIS_BUILD_DIR/gradle.properties
 - echo "RELEASE_KEY_PASSWORD=$RELEASE_STORE_PASSWORD" >> $TRAVIS_BUILD_DIR/gradle.properties
 - echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> $TRAVIS_BUILD_DIR/gradle.properties
-- yes | sdkmanager "platforms;android-27"
-- yes | sdkmanager "build-tools;27.0.3"
 script:
 - "./gradlew assembleRelease"
 env:
